@@ -1,11 +1,30 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* No seu arquivo CSS Global (ex: main.css) */
+@import url('https://fonts.googleapis.com/css2?family=Ruda:wght@400;700&display=swap');
+
+@font-face {
+  font-family: 'Sugo Display';
+  src: url('../fonts/sugo_pro_display/Sugo-Pro-Display-Regular-trial.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --fonte-principal: 'Sugo Display', sans-serif;
+  --fonte-secundaria: 'Ruda', sans-serif;
 }
 
 body {
-  font-family: system-ui, sans-serif;
-  background: #fff;
-  color: #111;
+  font-family: var(--fonte-secundaria);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--fonte-principal);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Evita rolagem horizontal indesejada */
 }

@@ -4,6 +4,7 @@
       <img src="C:\Users\User\OneDrive\Área de Trabalho\Sem-Parar-Site\src\assets\images\logo.png" alt="Sem Parar" class="logo" />
     </div>
 
+    <!-- ALTERAR FONTE -->
     <nav class="nav-links">
       <a href="#" class="nav-item">OLIMPÍADAS</a>
       <a href="#" class="nav-item">NOTÍCIAS</a>
@@ -18,21 +19,20 @@
 </script>
 
 <style scoped>
-/* Estilo do fundo e layout principal */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 40px;
-  background-color: #EBEBEB; /* Cinza claro do fundo */
+  padding: 5px 30px;
+  background-color: #EBEBEB;
   border-bottom: 2px solid #ddd;
-  font-family: sans-serif;
-  height: 80px;
+  font-family: Sugo Display, sans-serif;
+  height: 60px;
 }
 
 /* Logo */
 .logo {
-  height: 80px; /* Ajuste conforme o tamanho original */
+  height: 70px; /* Ajuste conforme o tamanho original */
 }
 
 /* Links de Navegação */
