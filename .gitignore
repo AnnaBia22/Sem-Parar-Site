@@ -1,24 +1,19 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Ignora as bibliotecas do Vue e do Strapi
+node_modules/
+frontend/node_modules/
+meu-cms/node_modules/
 
-node_modules
-dist
-dist-ssr
-*.local
+# Ignora arquivos temporários e de build
+.tmp/
+.cache/
+dist/
+build/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Ignora o banco de dados local do Strapi (para não subir pro GitHub)
+.tmp/data.db
+meu-cms/.tmp/
+meu-cms/.cache/
+
+# Arquivos de sistema
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+.env

@@ -1,7 +1,7 @@
 <template>
   <header class="navbar">
     <div class="logo-container">
-      <img src="C:\Users\User\OneDrive\Área de Trabalho\Sem-Parar-Site\src\assets\images\logo.png" alt="Sem Parar" class="logo" />
+      <img src="..\assets\images\logo.png" alt="Sem Parar" class="logo" />
     </div>
 
     <!-- ALTERAR FONTE -->
