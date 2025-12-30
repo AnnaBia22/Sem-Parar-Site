@@ -22,6 +22,7 @@ Até o momento, estamos trabalhando com:
 - **Vue 3**
 - **Vite**
 - **Vue Router**
+- **Javascript**
 
 > Outras tecnologias poderão ser adicionadas conforme o desenvolvimento evoluir.
 
