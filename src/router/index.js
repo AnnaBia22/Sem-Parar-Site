@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import Home from '../pages/home.vue'
-import Quem from '../pages/quemsomos.vue'
+import QuemSomos from '../pages/quemsomos.vue'
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/quem-somos', component: Quem },
+  { path: '/quem-somos', component: QuemSomos }
 ]
 
 export default createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 })
