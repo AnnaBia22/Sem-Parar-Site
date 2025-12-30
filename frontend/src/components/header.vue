@@ -1,15 +1,21 @@
 <template>
   <header class="navbar">
     <div class="logo-container">
-      <img src="..\assets\images\logo.png" alt="Sem Parar" class="logo" />
-    </div>
+  <router-link to="/">
+    <img 
+      src="../assets/images/logo.png" 
+      alt="Sem Parar" 
+      class="logo" 
+    />
+  </router-link>
+</div>
 
     <!-- ALTERAR FONTE -->
     <nav class="nav-links">
-      <a href="#" class="nav-item">OLIMPÍADAS</a>
-      <a href="#" class="nav-item">NOTÍCIAS</a>
-      <a href="#" class="nav-item">QUEM SOMOS</a>
-      <a href="#" class="nav-item">FALE CONOSCO</a>
+  <router-link to="/#" class="nav-item">OLIMPÍADAS</router-link>
+  <router-link to="/noticias" class="nav-item">NOTÍCIAS</router-link>
+  <router-link to="/quem-somos" class="nav-item">QUEM SOMOS</router-link>
+  <router-link to="/#" class="nav-item">FALE CONOSCO</router-link>
     </nav>
   </header>
 </template>

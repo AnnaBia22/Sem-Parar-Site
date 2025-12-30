@@ -1,27 +1,32 @@
 <template>
   <Header />
 
-  <main class="container">
-    <section class="intro">
-      <h1 class="titulo-principal">{{ data.titulo }}</h1>
+  <LoadingStatus v-if="loading" />
+
+  <main class="container" v-else>
+    <section v-if="dataIntro" class="intro">
+      <h1 class="titulo-principal">{{ dataIntro.titulo }}</h1>
       <div class="descricao-box">
-        <p v-for="(paragrafo, index) in data.descricao" :key="index">
-          {{ paragrafo }}
-        </p>
+        <p v-for="(p, i) in dataIntro.descricao" :key="i">{{ p }}</p>
       </div>
     </section>
 
-    <section v-for="(secao, sIdx) in data.secoes" :key="sIdx" class="secao-time">
-      <h2 class="titulo-laranja">{{ secao.titulo }}</h2>
-      <h3 v-if="secao.subtitulo" class="titulo-roxo">{{ secao.subtitulo }}</h3>
+    <section v-for="secao in secoesDinamicas" :key="secao.id" class="secao-time">
+      
+      <h2 v-if="secao.tipoTitulo === 'laranja'" class="titulo-laranja">
+        {{ secao.id === 'Coordenadoras' ? 'NOSSO TIME' : 'LEGADOS' }}
+      </h2>
+      
+      <h3 :class="secao.tipoTitulo === 'laranja' ? 'titulo-roxo' : 'titulo-materia-roxo'">
+        {{ secao.label }}
+      </h3>
       
       <div class="grid-membros">
-        <div v-for="(membro, mIdx) in secao.membros" :key="mIdx" class="polaroid-container">
+        <div v-for="membro in secao.membros" :key="membro.id" class="polaroid-container">
           <div class="card-flip">
-            
             <div class="card-front">
               <div class="foto-placeholder">
-                <img :src="membro.imagem" :alt="membro.nome">
+                <img :src="membro.foto" :alt="membro.nome">
               </div>
               <div class="info-membro">
                 <span class="nome">{{ membro.nome }}</span>
@@ -33,7 +38,6 @@
               <h4 class="titulo-bio">Bio</h4>
               <p class="texto-bio">{{ membro.bio }}</p>
             </div>
-
           </div>
         </div>
       </div>
@@ -44,13 +48,90 @@
 </template>
 
 <script setup>
+import { ref, onMounted, computed } from 'vue'
 import Header from '../components/header.vue'
 import Footer from '../components/footer.vue'
-import { quemSomosData as data } from '../router/quemsomos.js'
+import LoadingStatus from '../components/loading.vue'
+import axios from 'axios'
+
+const baseUrl = "http://localhost:1337"
+const voluntarias = ref([])
+const loading = ref(true)
+
+const dataIntro = {
+  titulo: "QUEM SOMOS",
+  descricao: [
+    "O projeto Sem Parar é uma iniciativa dedicada a empoderar meninas nas ciências.",
+    "Conheça as voluntárias que fazem tudo isso acontecer nas mais diversas áreas."
+  ]
+}
+
+const nomesCategorias = {
+  Coordenadoras: "COORDENADORAS GERAIS",
+  Informatica: "INFORMÁTICA",
+  Matematica: "MATEMÁTICA",
+  Fisica: "FÍSICA",
+  Biologia: "BIOLOGIA",
+  Quimica: "QUÍMICA",
+  Astronomia: "ASTRONOMIA",
+  Legados: "LEGADOS"
+}
+
+onMounted(async () => {
+  try {
+    const res = await axios.get(`${baseUrl}/api/voluntarias?populate=*`)
+    console.log("Dados da API:", res.data.data)
+    voluntarias.value = Array.isArray(res.data.data) ? res.data.data : []
+  } catch (error) {
+    console.error("Erro ao buscar dados:", error)
+  } finally {
+    loading.value = false
+  }
+})
+
+const secoesDinamicas = computed(() => {
+  if (!voluntarias.value.length) return []
+
+  const categoriasOrdem = ['Coordenadoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Legados']
+
+  return categoriasOrdem.map(cat => {
+    const membrosFiltrados = voluntarias.value.filter(v => {
+      const c = v.attributes?.categoria || v.categoria
+      return c?.toLowerCase().trim() === cat.toLowerCase().trim()
+    }).map(m => {
+      // Extração segura de dados
+      const attr = m.attributes || m
+      let bioTexto = "Bio não informada."
+      
+      if (attr.bio) {
+        if (typeof attr.bio === 'string') bioTexto = attr.bio
+        else if (Array.isArray(attr.bio)) bioTexto = attr.bio[0]?.children?.[0]?.text || bioTexto
+      }
+
+      const imgUrl = attr.imagem?.data?.attributes?.url || attr.imagem?.url
+
+      return {
+        id: m.id,
+        nome: attr.nome || "Sem nome",
+        cargo: attr.cargo || "Voluntária",
+        bio: bioTexto,
+        foto: imgUrl ? `${baseUrl}${imgUrl}` : "https://via.placeholder.com/240"
+      }
+    })
+
+    return {
+      id: cat,
+      label: nomesCategorias[cat],
+      tipoTitulo: (cat === 'Coordenadoras' || cat === 'Legados') ? 'laranja' : 'roxo',
+      membros: membrosFiltrados
+    }
+  }).filter(s => s.membros.length > 0)
+})
 </script>
 
 <style scoped>
 .container {
+  flex: 1;
   max-width: 1100px;
   margin: 0 auto;
   padding: 40px 20px;
