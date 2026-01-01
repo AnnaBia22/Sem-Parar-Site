@@ -10,7 +10,9 @@
 
     <div class="footer-section center">
       <div class="contact-info">
-        <a href="mailto:emaildoprojeto@gmail.com">emaildoprojeto@gmail.com</a>
+        <a href="mailto:sempararprojeto@gmail.com" target="_blank">
+          sempararprojeto@gmail.com
+        </a>
         <a href="https://www.instagram.com/sempararprojeto/" target="_blank">@sempararprojeto</a>
       </div>
       <p class="license">MIT LICENSE</p>

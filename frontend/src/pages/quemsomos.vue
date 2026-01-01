@@ -11,18 +11,38 @@
       </div>
     </section>
 
-    <section v-for="secao in secoesDinamicas" :key="secao.id" class="secao-time">
+    <section v-if="temEquipe" class="secao-time">
+      <h2 class="titulo-laranja">NOSSO TIME</h2>
       
-      <h2 v-if="secao.tipoTitulo === 'laranja'" class="titulo-laranja">
-        {{ secao.id === 'Coordenadoras' ? 'NOSSO TIME' : 'LEGADOS' }}
-      </h2>
-      
-      <h3 :class="secao.tipoTitulo === 'laranja' ? 'titulo-roxo' : 'titulo-materia-roxo'">
-        {{ secao.label }}
-      </h3>
-      
+      <div v-for="secao in secoesEquipe" :key="secao.id" class="subsecao-materia">
+        <h3 class="titulo-roxo">{{ secao.label }}</h3>
+        
+        <div class="grid-membros">
+          <div v-for="membro in secao.membros" :key="membro.id" class="polaroid-container">
+            <div class="card-flip">
+              <div class="card-front">
+                <div class="foto-placeholder">
+                  <img :src="membro.foto" :alt="membro.nome">
+                </div>
+                <div class="info-membro">
+                  <span class="nome">{{ membro.nome }}</span>
+                  <span class="cargo">{{ membro.cargo }}</span>
+                </div>
+              </div>
+              <div class="card-back">
+                <h4 class="titulo-bio">Bio</h4>
+                <p class="texto-bio">{{ membro.bio }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section v-if="secaoLegados" class="secao-time">
+      <h2 class="titulo-laranja">LEGADOS</h2>
       <div class="grid-membros">
-        <div v-for="membro in secao.membros" :key="membro.id" class="polaroid-container">
+        <div v-for="membro in secaoLegados.membros" :key="membro.id" class="polaroid-container">
           <div class="card-flip">
             <div class="card-front">
               <div class="foto-placeholder">
@@ -33,7 +53,6 @@
                 <span class="cargo">{{ membro.cargo }}</span>
               </div>
             </div>
-
             <div class="card-back">
               <h4 class="titulo-bio">Bio</h4>
               <p class="texto-bio">{{ membro.bio }}</p>
@@ -80,7 +99,6 @@ const nomesCategorias = {
 onMounted(async () => {
   try {
     const res = await axios.get(`${baseUrl}/api/voluntarias?populate=*`)
-    console.log("Dados da API:", res.data.data)
     voluntarias.value = Array.isArray(res.data.data) ? res.data.data : []
   } catch (error) {
     console.error("Erro ao buscar dados:", error)
@@ -89,27 +107,22 @@ onMounted(async () => {
   }
 })
 
-const secoesDinamicas = computed(() => {
-  if (!voluntarias.value.length) return []
-
+// Processa todas as seções
+const todasSecoes = computed(() => {
   const categoriasOrdem = ['Coordenadoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Legados']
-
+  
   return categoriasOrdem.map(cat => {
-    const membrosFiltrados = voluntarias.value.filter(v => {
+    const membros = voluntarias.value.filter(v => {
       const c = v.attributes?.categoria || v.categoria
       return c?.toLowerCase().trim() === cat.toLowerCase().trim()
     }).map(m => {
-      // Extração segura de dados
       const attr = m.attributes || m
       let bioTexto = "Bio não informada."
-      
       if (attr.bio) {
         if (typeof attr.bio === 'string') bioTexto = attr.bio
         else if (Array.isArray(attr.bio)) bioTexto = attr.bio[0]?.children?.[0]?.text || bioTexto
       }
-
       const imgUrl = attr.imagem?.data?.attributes?.url || attr.imagem?.url
-
       return {
         id: m.id,
         nome: attr.nome || "Sem nome",
@@ -118,15 +131,18 @@ const secoesDinamicas = computed(() => {
         foto: imgUrl ? `${baseUrl}${imgUrl}` : "https://via.placeholder.com/240"
       }
     })
-
-    return {
-      id: cat,
-      label: nomesCategorias[cat],
-      tipoTitulo: (cat === 'Coordenadoras' || cat === 'Legados') ? 'laranja' : 'roxo',
-      membros: membrosFiltrados
-    }
+    return { id: cat, label: nomesCategorias[cat], membros }
   }).filter(s => s.membros.length > 0)
 })
+
+// Filtra quem vai para o bloco "NOSSO TIME"
+const secoesEquipe = computed(() => todasSecoes.value.filter(s => s.id !== 'Legados'))
+
+// Filtra quem vai para o bloco "LEGADOS"
+const secaoLegados = computed(() => todasSecoes.value.find(s => s.id === 'Legados'))
+
+// Verifica se existe alguém na equipe para mostrar o título laranja principal
+const temEquipe = computed(() => secoesEquipe.value.length > 0)
 </script>
 
 <style scoped>
@@ -154,36 +170,38 @@ const secoesDinamicas = computed(() => {
 }
 
 .secao-time {
-  text-align: left;
   margin-bottom: 80px;
+}
+
+.subsecao-materia {
+  margin-bottom: 60px;
 }
 
 .titulo-laranja {
   color: #ff9a16;
-  font-size: 2.5rem;
-  margin-bottom: 10px;
+  font-size: 2.8rem;
+  margin-bottom: 30px;
   text-transform: uppercase;
+  text-align: left;
 }
 
 .titulo-roxo {
   color: #890d8e;
   font-size: 1.8rem;
-  margin: 0 0 40px 50px;
+  margin: 0 0 30px 40px;
   display: block;
+  text-transform: uppercase;
 }
 
-/* GRID AJUSTADO */
 .grid-membros {
   display: grid;
-  /* Usamos auto-fill e definimos um tamanho fixo para o card não esticar */
   grid-template-columns: repeat(auto-fill, 240px); 
   gap: 40px;
-  justify-content: flex-start; /* Alinha os cards à esquerda na seção */
+  justify-content: flex-start;
 }
 
-/* CONTAINER DO GIRO */
 .polaroid-container {
-  width: 240px; /* Largura idêntica ao grid column */
+  width: 240px;
   height: 360px;
   perspective: 1000px;
   cursor: pointer;
@@ -195,36 +213,25 @@ const secoesDinamicas = computed(() => {
   height: 100%;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
-  transform-origin: center center; /* Garante o eixo no meio */
 }
 
 .polaroid-container:hover .card-flip {
   transform: rotateY(180deg);
 }
 
-/* ESTILIZAÇÃO DAS FACES */
 .card-front, .card-back {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden; /* Suporte para Safari */
   padding: 15px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-sizing: border-box; /* Garante que padding não mude o tamanho total */
+  box-sizing: border-box;
 }
 
-.card-front {
-  background: #ebebeb;
-  display: flex;
-  flex-direction: column;
-  z-index: 2;
-  transform: rotateY(0deg); /* Ponto de partida */
-}
+.card-front { background: #ebebeb; display: flex; flex-direction: column; }
 
 .foto-placeholder {
   background: #FFFFFF;
@@ -235,33 +242,12 @@ const secoesDinamicas = computed(() => {
   border: 1px solid #ddd;
 }
 
-.foto-placeholder img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.foto-placeholder img { width: 100%; height: 100%; object-fit: cover; }
 
-.info-membro {
-  text-align: center;
-}
+.info-membro { text-align: center; }
+.nome { color: #25074f; font-weight: bold; display: block; font-size: 1.1rem; }
+.cargo { font-size: 0.8rem; color: #555; display: block; margin-top: 5px; font-style: italic; }
 
-.nome {
-  color: #25074f;
-  font-weight: bold;
-  display: block;
-  font-size: 1.1rem;
-}
-
-.cargo {
-  font-family: 'Ruda', sans-serif;
-  font-size: 0.8rem;
-  color: #555;
-  display: block;
-  margin-top: 5px;
-  font-style: italic;
-}
-
-/* VERSO */
 .card-back {
   background: #f8f8f8;
   transform: rotateY(180deg);
@@ -279,19 +265,10 @@ const secoesDinamicas = computed(() => {
   border-bottom: 2px solid #ff9a16;
 }
 
-.texto-bio {
-  font-family: 'Ruda', sans-serif;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: #333;
-  padding: 0 5px;
-}
+.texto-bio { font-size: 0.9rem; line-height: 1.5; color: #333; padding: 0 5px; }
 
 @media (max-width: 768px) {
-  .titulo-roxo { margin-left: 20px; }
-  .grid-membros { 
-    justify-content: center; /* Centraliza o grid em telas pequenas */
-    grid-template-columns: repeat(auto-fill, 240px);
-  }
+  .titulo-roxo { margin-left: 10px; font-size: 1.5rem; }
+  .grid-membros { justify-content: center; }
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import Footer from '../components/footer.vue'
 
 // Menu e Cards
 const menuItems = ['QUEM SOMOS?', 'NOTÍCIAS', 'CURSOS', 'FALE CONOSCO'];
@@ -88,6 +89,8 @@ const cards = [
     </section>
 
   </div>
+  
+  <Footer />
 </template>
 
 <style scoped>
