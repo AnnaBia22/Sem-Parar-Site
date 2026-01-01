@@ -107,7 +107,6 @@ onMounted(async () => {
   }
 })
 
-// Processa todas as seções
 const todasSecoes = computed(() => {
   const categoriasOrdem = ['Coordenadoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Legados']
   
@@ -135,22 +134,20 @@ const todasSecoes = computed(() => {
   }).filter(s => s.membros.length > 0)
 })
 
-// Filtra quem vai para o bloco "NOSSO TIME"
 const secoesEquipe = computed(() => todasSecoes.value.filter(s => s.id !== 'Legados'))
-
-// Filtra quem vai para o bloco "LEGADOS"
 const secaoLegados = computed(() => todasSecoes.value.find(s => s.id === 'Legados'))
-
-// Verifica se existe alguém na equipe para mostrar o título laranja principal
 const temEquipe = computed(() => secoesEquipe.value.length > 0)
 </script>
 
 <style scoped>
 .container {
   flex: 1;
-  max-width: 1100px;
+  width: 100%;
+  max-width: 100vw;
   margin: 0 auto;
-  padding: 40px 20px;
+  /* AUMENTADO: De 40px para 60px para descer mais o conteúdo */
+  padding: 40px 20px 40px; 
+  box-sizing: border-box;
   font-family: 'Ruda', sans-serif;
 }
 
@@ -159,25 +156,27 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
   margin-bottom: 60px;
 }
 
-.titulo-principal, .titulo-laranja, .titulo-roxo, .titulo-bio, .nome {
-  font-family: 'Sugo Display', sans-serif;
-}
-
 .titulo-principal {
+  font-family: 'Sugo Display', sans-serif;
   color: #ff9a16;
   font-size: 2.8rem;
-  margin-bottom: 25px;
+  /* Margem zero no topo para alinhar com o padding do container */
+  margin: 0 0 25px 0; 
+  text-align: center;
 }
 
-.secao-time {
-  margin-bottom: 80px;
+.descricao-box {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+  color: #444;
 }
 
-.subsecao-materia {
-  margin-bottom: 60px;
-}
+.secao-time { margin-bottom: 80px; }
+.subsecao-materia { margin-bottom: 60px; }
 
 .titulo-laranja {
+  font-family: 'Sugo Display', sans-serif;
   color: #ff9a16;
   font-size: 2.8rem;
   margin-bottom: 30px;
@@ -186,6 +185,7 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
 }
 
 .titulo-roxo {
+  font-family: 'Sugo Display', sans-serif;
   color: #890d8e;
   font-size: 1.8rem;
   margin: 0 0 30px 40px;
@@ -215,9 +215,7 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
   transform-style: preserve-3d;
 }
 
-.polaroid-container:hover .card-flip {
-  transform: rotateY(180deg);
-}
+.polaroid-container:hover .card-flip { transform: rotateY(180deg); }
 
 .card-front, .card-back {
   position: absolute;
@@ -245,7 +243,7 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
 .foto-placeholder img { width: 100%; height: 100%; object-fit: cover; }
 
 .info-membro { text-align: center; }
-.nome { color: #25074f; font-weight: bold; display: block; font-size: 1.1rem; }
+.nome { font-family: 'Sugo Display', sans-serif; color: #25074f; font-weight: bold; display: block; font-size: 1.1rem; }
 .cargo { font-size: 0.8rem; color: #555; display: block; margin-top: 5px; font-style: italic; }
 
 .card-back {
@@ -259,6 +257,7 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
 }
 
 .titulo-bio {
+  font-family: 'Sugo Display', sans-serif;
   color: #890d8e;
   margin-bottom: 15px;
   font-size: 1.4rem;
@@ -270,5 +269,6 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
 @media (max-width: 768px) {
   .titulo-roxo { margin-left: 10px; font-size: 1.5rem; }
   .grid-membros { justify-content: center; }
+  .titulo-laranja { text-align: center; }
 }
 </style>

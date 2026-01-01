@@ -71,13 +71,10 @@ onMounted(async () => {
 <style scoped>
 .container { 
   flex: 1; 
-  /* Ocupa 100% da largura disponível */
   width: 100%; 
-  /* Define o limite máximo como a largura da tela */
   max-width: 100vw; 
   margin: 0 auto; 
-  /* 20px de margem nas laterais através do padding */
-  padding: 5px 20px 40px; 
+  padding: 40px 20px; /* Igualado ao Quem Somos */
   box-sizing: border-box;
 }
 
@@ -86,7 +83,7 @@ onMounted(async () => {
   color: #ff9a16; 
   text-align: center; 
   font-size: 2.8rem; 
-  margin-bottom: 20px; 
+  margin: 0 0 20px 0; /* Removido margin-top para alinhar no topo */
 }
 
 .lista-noticias { 
@@ -105,7 +102,6 @@ onMounted(async () => {
   transition: transform 0.2s;
   align-items: center;
   gap: 30px;
-  /* Garante que o card se estenda por toda a largura do container */
   width: 100%;
   box-sizing: border-box;
 }
@@ -133,7 +129,6 @@ onMounted(async () => {
 .info-noticia { 
   display: flex; 
   flex-direction: column; 
-  /* Faz o texto preencher o resto da largura do card */
   flex: 1; 
   gap: 2px; 
   color: #333; 
