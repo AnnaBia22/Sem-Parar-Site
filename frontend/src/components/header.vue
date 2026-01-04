@@ -8,14 +8,14 @@
       class="logo" 
     />
   </router-link>
-</div>
+    </div>
 
     <!-- ALTERAR FONTE -->
     <nav class="nav-links">
   <router-link to="/#" class="nav-item">OLIMPÍADAS</router-link>
   <router-link to="/noticias" class="nav-item">NOTÍCIAS</router-link>
   <router-link to="/quem-somos" class="nav-item">QUEM SOMOS</router-link>
-  <router-link to="/#" class="nav-item">FALE CONOSCO</router-link>
+  <router-link to="/fale-conosco" class="nav-item">FALE CONOSCO</router-link>
     </nav>
   </header>
 </template>
@@ -25,6 +25,7 @@
 </script>
 
 <style scoped>
+/* Estilo do fundo e layout principal */
 .navbar {
   display: flex;
   justify-content: space-between;

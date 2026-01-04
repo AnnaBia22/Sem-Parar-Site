@@ -80,7 +80,14 @@ const loading = ref(true)
 const dataIntro = {
   titulo: "QUEM SOMOS",
   descricao: [
-    "O projeto Sem Parar é uma iniciativa dedicada a empoderar meninas nas ciências.",
+    "O Sem Parar nasceu em 2018 a partir do sonho de meninas do Ensino Médio que acreditavam na educação e na ciência como caminhos de transformação. Inicialmente voltado para a preparação de meninas para olimpíadas de Matemática, especialmente de escolas públicas do interior do Ceará e de Fortaleza, o projeto cresceu ao longo dos anos e, em 2020, migrou para o formato on-line, ampliando seu alcance para todo o Brasil.",
+
+    "Guiado pelo lema “meninas ensinando meninas”, o Sem Parar oferece cursos gratuitos preparatórios para olimpíadas científicas em diversas áreas do conhecimento. Por meio de aulas, materiais didáticos, listas de exercícios, simulados e uma grande comunidade colaborativa, buscamos fortalecer a representatividade feminina em um espaço historicamente masculino, promovendo pertencimento, acolhimento e excelência acadêmica.",
+
+    "Hoje, o projeto é formado por um time de mais de 30 voluntárias, todas meninas, atuando nas áreas de Astronomia, Biologia, Física, Informática, Matemática e Química. Desde 2020, já impactamos mais de 3000 alunas e conquistamos centenas de premiações, incluindo participações e medalhas em olimpíadas nacionais e internacionais. Em algumas edições de olimpíadas internacionais femininas, como a EGMO e a EGOI, equipes brasileiras foram compostas 100% por alunas e voluntárias do Sem Parar.",
+
+    "Seguimos construindo pontes entre regiões, saberes e sonhos, estimulando o protagonismo feminino nas ciências e abrindo caminhos para novos futuros.",
+    
     "Conheça as voluntárias que fazem tudo isso acontecer nas mais diversas áreas."
   ]
 }
@@ -146,7 +153,7 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
   max-width: 100vw;
   margin: 0 auto;
   /* AUMENTADO: De 40px para 60px para descer mais o conteúdo */
-  padding: 40px 20px 40px; 
+  padding: 40px 60px 40px; 
   box-sizing: border-box;
   font-family: 'Ruda', sans-serif;
 }
