@@ -2,14 +2,10 @@
 import { ref } from 'vue';
 import Footer from '../components/footer.vue'
 
+
 // Menu e Cards
 const menuItems = ['QUEM SOMOS?', 'NOTÍCIAS', 'CURSOS', 'FALE CONOSCO'];
 
-const cards = [
-  { id: 1, title: 'FÍSICA', icon: '💡' },
-  { id: 2, title: 'ASTRONOMIA', icon: '🪐' },
-  { id: 3, title: 'MATEMÁTICA', icon: '📐' }
-];
 </script>
 
 <template>
@@ -34,7 +30,7 @@ const cards = [
     <section class="hero">
       <div class="container">
         <div class="banner-container">
-          <img class="banner-img" src="../assets/images/bannerinicial.png" alt="Banner Olimpíada">
+          <img class="banner-img" src="" alt="Banner Olimpíada">
         </div>
         <p class="hero-text">
           Lorem sed non fermentum tortor. Pellentesque finibus felis lorem. Aenean orci ante,
