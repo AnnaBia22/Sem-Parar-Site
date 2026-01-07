@@ -116,6 +116,7 @@ const nomesCategorias = {
   Biologia: "BIOLOGIA",
   Quimica: "QUÍMICA",
   Astronomia: "ASTRONOMIA",
+  Midia: "MÍDIA",
   Legados: "LEGADOS"
 }
 
@@ -131,7 +132,7 @@ onMounted(async () => {
 })
 
 const todasSecoes = computed(() => {
-  const categoriasOrdem = ['Administracao', 'Desenvolvedoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Legados']
+  const categoriasOrdem = ['Administracao', 'Desenvolvedoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Midia', 'Legados']
   
   return categoriasOrdem.map(cat => {
     const membros = voluntarias.value.filter(v => {
@@ -217,9 +218,12 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
 
 .grid-membros {
   display: flex;
-  grid-template-columns: repeat(auto-fill, 240px); 
+  flex-wrap: wrap;       /* ESSENCIAL: permite que as imagens desçam para a próxima linha */
   gap: 40px;
-  justify-content: center; /* Centraliza as polaroids */
+  justify-content: center; /* Centraliza as imagens dentro do grid */
+  max-width: 1080px;      /* (240px * 4) + (40px * 3) = limita a 4 por linha */
+  margin: 0 auto;        /* Centraliza o bloco inteiro do grid na página e remove a margem lateral */
+  width: 100%;
 }
 
 .polaroid-container {
