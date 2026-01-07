@@ -33,7 +33,8 @@
     "categoria": {
       "type": "enumeration",
       "enum": [
-        "Coordenadoras",
+        "Administracao",
+        "Desenvolvedoras",
         "Matematica",
         "Informatica",
         "Fisica",
