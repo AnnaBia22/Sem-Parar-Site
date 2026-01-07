@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_home_element_card_cursos",
+  "info": {
+    "displayName": "CardCurso"
+  },
+  "options": {},
+  "attributes": {
+    "nome_curso": {
+      "type": "string"
+    },
+    "link_pag": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

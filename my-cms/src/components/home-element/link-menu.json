@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_home_element_link_menus",
+  "info": {
+    "displayName": "LinkMenu"
+  },
+  "options": {},
+  "attributes": {
+    "texto": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

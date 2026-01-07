@@ -1,121 +1,177 @@
 <script setup>
-import { ref } from 'vue';
-import Footer from '../components/footer.vue'
+import { ref, onMounted } from 'vue';
+import Footer from '../components/footer.vue';
 
+const dadosHome = ref(null);
+const carregando = ref(true);
+const erro = ref(null);
+const STRAPI_URL = 'http://localhost:1337';
 
-// Menu e Cards
-const menuItems = ['QUEM SOMOS?', 'NOTÍCIAS', 'CURSOS', 'FALE CONOSCO'];
+const buscarDados = async () => {
+  try {
+    // CORREÇÃO: Removi o asterisco do menu também para evitar conflitos.
+    // Usamos populate=* dentro do menu para garantir que traga link e texto.
+    const query = [
+      '?populate[menu_navegacao][populate]=*', 
+      '&populate[banner_destaques][populate]=imagem',
+      '&populate[cursos_abertos][populate]=icon',
+      '&populate[lista_depoimentos][populate]=foto_aluna',
+      '&populate[Logo][fields]=url'
+    ].join('');
+    
+    const resposta = await fetch(`${STRAPI_URL}/api/home${query}`);
+    
+    if (!resposta.ok) {
+      const erroTexto = await resposta.text();
+      throw new Error(`Erro API: ${resposta.status} - ${erroTexto}`);
+    }
 
+    const json = await resposta.json();
+    dadosHome.value = json.data.attributes;
+  } catch (e) {
+    console.error("Erro detalhado:", e);
+    erro.value = `Ocorreu um erro: ${e.message}`;
+  } finally {
+    carregando.value = false;
+  }
+};
+
+const getImgUrl = (midia) => {
+  if (!midia || !midia.data) return '';
+  if (Array.isArray(midia.data)) {
+      if (midia.data.length > 0) return `${STRAPI_URL}${midia.data[0].attributes.url}`;
+      return '';
+  }
+  if (midia.data && midia.data.attributes) {
+      return `${STRAPI_URL}${midia.data.attributes.url}`;
+  }
+  return '';
+};
+
+onMounted(() => {
+  buscarDados();
+});
 </script>
 
 <template>
   <div class="landing-page">
-    
-    <header>
-      <div class="container header-content">
-        <div class="logo-area">
-          <img class="logo" src="../assets/images/logo.png" alt="Logo Projeto Sem Parar">
-        </div>
-        
-        <nav>
-          <ul class="nav-list">
-            <li v-for="item in menuItems" :key="item" class="nav-item">
-              <a href="#">{{ item }}</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
 
-    <section class="hero">
-      <div class="container">
-        <div class="banner-container">
-          <img class="banner-img" src="" alt="Banner Olimpíada">
-        </div>
-        <p class="hero-text">
-          Lorem sed non fermentum tortor. Pellentesque finibus felis lorem. Aenean orci ante,
-          pellentesque et purus quis, dapibus laoreet elit. In hac habitasse platea dictumst.
-        </p>
-      </div>
-    </section>
+    <div v-if="carregando" class="aviso carregando">
+      🔄 Buscando dados do site...
+    </div>
 
-    <section class="inscricoes">
-      <div class="container"> <h2 class="section-title text-orange">Inscrições abertas</h2>
-        
-        <div class="cards-container">
-          <div v-for="card in cards" :key="card.id" class="card">
-            <span class="card-icon">{{ card.icon }}</span>
-            <span class="card-title">{{ card.title }}</span>
+    <div v-else-if="erro" class="aviso erro">
+      <h3>❌ Algo deu errado!</h3>
+      <p>{{ erro }}</p>
+      <p style="font-size: 0.8rem; margin-top: 10px;">Dica: Verifique se o Strapi está rodando e se o conteúdo está Publicado.</p>
+    </div>
+
+    <div v-else-if="dadosHome">
+      
+      <header>
+        <div class="container header-content">
+          <div class="logo-area">
+            <img v-if="dadosHome.Logo" class="logo" :src="getImgUrl(dadosHome.Logo)" alt="Logo Projeto Sem Parar">
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="depoimentos">
-      <div class="container">
-        <div class="depoimentos-header">
-          <h2 class="title-orange">DEPOIMENTOS</h2>
-          <h2 class="title-purple">DE ALUNAS</h2>
-        </div>
-
-        <div class="carousel-container">
-          <button class="arrow-btn">
-            <img src="../assets/images/setaesquerda.png" alt="Anterior">
-          </button>
           
-          <div class="content-wrapper">
-            <img class="foto-aluna" src="../assets/images/alunaexemplo.png" alt="Foto da Aluna">
-            <p class="testimonial-text">
-              Lorem Proin dui leo, rhoncus ut suscipit quis, blandit vitae erat.
-              Suspendisse ante tortor, ultrices sit amet sapien eget, consequat venenatis felis.
-              Maecenas maximus nunc lectus, eu vestibulum risus ultricies quis.
-              Ut sit amet ornare velit.
-            </p>
+          <nav>
+            <ul class="nav-list">
+              <li v-for="item in dadosHome.menu_navegacao" :key="item.id" class="nav-item">
+                <a :href="item.url">{{ item.texto }}</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div class="container">
+          <div class="banner-container" v-if="dadosHome.banner_destaques && dadosHome.banner_destaques.length > 0">
+            <img class="banner-img" :src="getImgUrl(dadosHome.banner_destaques[0].imagem)" alt="Banner Destaque">
+          </div>
+          
+          <p class="hero-text">
+            {{ dadosHome.texto_intro }}
+          </p>
+        </div>
+      </section>
+
+      <section class="inscricoes">
+        <div class="container"> 
+          <h2 class="section-title text-orange">Inscrições abertas</h2>
+          
+          <div class="cards-container">
+            <div v-for="curso in dadosHome.cursos_abertos" :key="curso.id" class="card">
+              <img :src="getImgUrl(curso.icon)" class="card-icon-img" style="width: 50px; height: 50px; object-fit: contain;">
+              
+              <div class="card-content">
+                <span class="card-title">{{ curso.nome_curso }}</span>
+                <a :href="curso.link_pag" class="btn-curso">VER MAIS</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="depoimentos">
+        <div class="container">
+          <div class="depoimentos-header">
+            <h2 class="title-orange">DEPOIMENTOS</h2>
+            <h2 class="title-purple">DE ALUNAS</h2>
           </div>
 
-          <button class="arrow-btn">
-            <img src="../assets/images/setadireita.png" alt="Próximo">
-          </button>
+          <div class="carousel-container">
+            <div class="content-wrapper" v-if="dadosHome.lista_depoimentos && dadosHome.lista_depoimentos.length > 0">
+              <img class="foto-aluna" :src="getImgUrl(dadosHome.lista_depoimentos[0].foto_aluna)" alt="Foto da Aluna">
+              <div class="texto-wrapper">
+                <p class="testimonial-text">"{{ dadosHome.lista_depoimentos[0].texto_depoimento }}"</p>
+                <p class="aluna-nome">- {{ dadosHome.lista_depoimentos[0].nome_aluna }}</p>
+              </div>
+            </div>
+             <div v-else>
+               <p style="text-align:center">Nenhum depoimento encontrado.</p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="decorative-element">
-        <div class="img-placeholder deco-img">ELEMENTOS VISUAIS</div>
-      </div>
-    </section>
+        <div class="decorative-element">
+          <div class="img-placeholder deco-img">ELEMENTOS VISUAIS</div>
+        </div>
+      </section>
 
+    </div>
+    
+    <Footer />
   </div>
-  
-  <Footer />
 </template>
 
 <style scoped>
-/* --- CONFIGURAÇÕES GERAIS --- */
+/* CSS EXTRA PARA OS AVISOS */
+.aviso {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.carregando { color: #25074f; }
+.erro { color: red; background-color: #fee; border: 1px solid red; margin: 20px; border-radius: 10px;}
+
+/* --- SEU CSS ORIGINAL CONTINUA ABAIXO --- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
 
 .landing-page {
   font-family: 'Roboto', sans-serif;
   width: 100%;
-  /* Removemos o max-width daqui para permitir seções full-width */
   background-color: #fffff5;
 }
 
-/* Nova classe utilitária para centralizar o conteúdo interno */
+/* ... O RESTO DO SEU CSS ... */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px; /* Margem de segurança nas laterais em mobile */
+  padding: 0 20px;
 }
-
-.img-placeholder {
-  background-color: #eee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #aaa;
-}
-
+/* ... (Mantenha o resto do seu CSS aqui) */
 /* --- HEADER --- */
 header {
   padding: 20px 0;
@@ -224,8 +280,8 @@ header {
   transform: translateY(-5px);
 }
 
-.card-icon {
-  font-size: 2rem;
+.card-icon-img {
+    margin-right: 15px;
 }
 
 .card-title {
@@ -277,30 +333,6 @@ header {
   gap: 30px;
 }
 
-.arrow-btn {
-  background: #ff9900;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.3s;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-}
-.arrow-btn:hover {
-  background: #e68a00;
-  transform: translateY(-2px);
-}
-
-.arrow-btn img {
-  width: 15px;
-  height: auto;
-}
-
 .content-wrapper {
   display: flex;
   align-items: center;
@@ -320,6 +352,14 @@ header {
   line-height: 1.6;
   font-size: 1rem;
   text-align: left;
+}
+.btn-curso {
+    display:block; 
+    margin-top:5px; 
+    font-weight:bold; 
+    color: #890d8e;
+    text-decoration: none;
+    font-size: 0.8rem;
 }
 
 /* Elemento decorativo */
@@ -353,9 +393,8 @@ header {
   }
   
   .nav-item a {
-    /* No mobile, talvez você queira que eles ocupem a largura total */
     width: 100%; 
-    max-width: 300px; /* Limite para não ficar gigante no tablet */
+    max-width: 300px; 
   }
   
   .title-orange, .title-purple {

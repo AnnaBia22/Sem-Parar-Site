@@ -1,0 +1,48 @@
+{
+  "kind": "singleType",
+  "collectionName": "homes",
+  "info": {
+    "singularName": "home",
+    "pluralName": "homes",
+    "displayName": "Home"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "menu_navegacao": {
+      "type": "component",
+      "component": "home-element.link-menu",
+      "repeatable": true
+    },
+    "banner_destaques": {
+      "type": "component",
+      "component": "home-element.banner",
+      "repeatable": true
+    },
+    "texto_intro": {
+      "type": "text"
+    },
+    "cursos_abertos": {
+      "type": "component",
+      "component": "home-element.card-curso",
+      "repeatable": true
+    },
+    "lista_depoimentos": {
+      "type": "component",
+      "component": "home-element.depoimentos",
+      "repeatable": true
+    }
+  }
+}

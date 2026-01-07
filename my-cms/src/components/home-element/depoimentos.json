@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_home_element_depoimentos",
+  "info": {
+    "displayName": "Depoimentos"
+  },
+  "options": {},
+  "attributes": {
+    "foto_aluna": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "texto_depoimento": {
+      "type": "text"
+    },
+    "nome_aluna": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
