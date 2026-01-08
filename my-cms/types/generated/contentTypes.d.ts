@@ -561,6 +561,7 @@ export interface ApiVoluntariaVoluntaria extends Struct.CollectionTypeSchema {
         'Quimica',
         'Biologia',
         'Astronomia',
+        'Midia',
         'Legados',
       ]
     >;
