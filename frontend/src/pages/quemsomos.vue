@@ -78,28 +78,45 @@ const voluntarias = ref([])
 const loading = ref(true)
 
 const dataIntro = {
+
   titulo: "QUEM SOMOS",
+
   descricao: [
+
     "O Sem Parar nasceu em 2018 a partir do sonho de meninas do Ensino Médio que acreditavam na educação e na ciência como caminhos de transformação. Inicialmente voltado para a preparação de meninas para olimpíadas de Matemática, especialmente de escolas públicas do interior do Ceará e de Fortaleza, o projeto cresceu ao longo dos anos e, em 2020, migrou para o formato on-line, ampliando seu alcance para todo o Brasil.",
+
+
 
     "Guiado pelo lema “meninas ensinando meninas”, o Sem Parar oferece cursos gratuitos preparatórios para olimpíadas científicas em diversas áreas do conhecimento. Por meio de aulas, materiais didáticos, listas de exercícios, simulados e uma grande comunidade colaborativa, buscamos fortalecer a representatividade feminina em um espaço historicamente masculino, promovendo pertencimento, acolhimento e excelência acadêmica.",
 
+
+
     "Hoje, o projeto é formado por um time de mais de 30 voluntárias, todas meninas, atuando nas áreas de Astronomia, Biologia, Física, Informática, Matemática e Química. Desde 2020, já impactamos mais de 3000 alunas e conquistamos centenas de premiações, incluindo participações e medalhas em olimpíadas nacionais e internacionais. Em algumas edições de olimpíadas internacionais femininas, como a EGMO e a EGOI, equipes brasileiras foram compostas 100% por alunas e voluntárias do Sem Parar.",
 
+
+
     "Seguimos construindo pontes entre regiões, saberes e sonhos, estimulando o protagonismo feminino nas ciências e abrindo caminhos para novos futuros.",
-    
+
+   
+
     "Conheça as voluntárias que fazem tudo isso acontecer nas mais diversas áreas."
+
   ]
+
 }
 
+
+
 const nomesCategorias = {
-  Coordenadoras: "COORDENADORAS GERAIS",
+  Administracao: "ADMINISTRAÇÃO",
+  Desenvolvedoras: "DESENVOLVEDORAS",
   Informatica: "INFORMÁTICA",
   Matematica: "MATEMÁTICA",
   Fisica: "FÍSICA",
   Biologia: "BIOLOGIA",
   Quimica: "QUÍMICA",
   Astronomia: "ASTRONOMIA",
+  Midia: "MÍDIA",
   Legados: "LEGADOS"
 }
 
@@ -115,7 +132,7 @@ onMounted(async () => {
 })
 
 const todasSecoes = computed(() => {
-  const categoriasOrdem = ['Coordenadoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Legados']
+  const categoriasOrdem = ['Administracao', 'Desenvolvedoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Midia', 'Legados']
   
   return categoriasOrdem.map(cat => {
     const membros = voluntarias.value.filter(v => {
@@ -152,7 +169,6 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
   width: 100%;
   max-width: 100vw;
   margin: 0 auto;
-  /* AUMENTADO: De 40px para 60px para descer mais o conteúdo */
   padding: 40px 60px 40px; 
   box-sizing: border-box;
   font-family: 'Ruda', sans-serif;
@@ -167,7 +183,6 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
   font-family: 'Sugo Display', sans-serif;
   color: #ff9a16;
   font-size: 2.8rem;
-  /* Margem zero no topo para alinhar com o padding do container */
   margin: 0 0 25px 0; 
   text-align: center;
 }
@@ -200,11 +215,15 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
   text-transform: uppercase;
 }
 
+
 .grid-membros {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 240px); 
+  display: flex;
+  flex-wrap: wrap;       /* ESSENCIAL: permite que as imagens desçam para a próxima linha */
   gap: 40px;
-  justify-content: flex-start;
+  justify-content: center; /* Centraliza as imagens dentro do grid */
+  max-width: 1080px;      /* (240px * 4) + (40px * 3) = limita a 4 por linha */
+  margin: 0 auto;        /* Centraliza o bloco inteiro do grid na página e remove a margem lateral */
+  width: 100%;
 }
 
 .polaroid-container {
@@ -253,25 +272,38 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
 .nome { font-family: 'Sugo Display', sans-serif; color: #25074f; font-weight: bold; display: block; font-size: 1.1rem; }
 .cargo { font-size: 0.8rem; color: #555; display: block; margin-top: 5px; font-style: italic; }
 
+/* 4. AJUSTES NO VERSO DO CARD */
 .card-back {
   background: #f8f8f8;
   transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  text-align: center;
 }
 
 .titulo-bio {
   font-family: 'Sugo Display', sans-serif;
   color: #890d8e;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+  margin-top: 0;
   font-size: 1.4rem;
   border-bottom: 2px solid #ff9a16;
+  flex-shrink: 0; /* Não deixa o título achatar */
 }
 
-.texto-bio { font-size: 0.9rem; line-height: 1.5; color: #333; padding: 0 5px; }
+.texto-bio { 
+  font-size: 0.9rem; 
+  line-height: 1.5; 
+  color: #333; 
+  padding: 0 5px;
+  overflow-y: auto; /* Habilita rolagem */
+  width: 100%;
+  text-align: center;
+}
+
+/* Scrollbar personalizada discreta */
+.texto-bio::-webkit-scrollbar { width: 4px; }
+.texto-bio::-webkit-scrollbar-thumb { background: #ff9a16; border-radius: 10px; }
 
 @media (max-width: 768px) {
   .titulo-roxo { margin-left: 10px; font-size: 1.5rem; }

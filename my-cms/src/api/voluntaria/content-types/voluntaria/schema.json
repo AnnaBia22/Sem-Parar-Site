@@ -33,13 +33,15 @@
     "categoria": {
       "type": "enumeration",
       "enum": [
-        "Coordenadoras",
+        "Administracao",
+        "Desenvolvedoras",
         "Matematica",
         "Informatica",
         "Fisica",
         "Quimica",
         "Biologia",
         "Astronomia",
+        "Midia",
         "Legados"
       ]
     }
