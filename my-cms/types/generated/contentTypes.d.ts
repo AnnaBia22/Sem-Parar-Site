@@ -430,33 +430,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiCursoCurso extends Struct.SingleTypeSchema {
-  collectionName: 'cursos';
-  info: {
-    displayName: 'Cursos';
-    pluralName: 'cursos';
-    singularName: 'curso';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    lista_cursos: Schema.Attribute.Component<'home-element.card-curso', true>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::curso.curso'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    subtitulo: Schema.Attribute.Text;
-    titulo_principal: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiHomeHome extends Struct.SingleTypeSchema {
   collectionName: 'homes';
   info: {
@@ -522,6 +495,34 @@ export interface ApiNoticiaNoticia extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     subtitulo: Schema.Attribute.String;
     tituloprincipal: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPaginaCursoPaginaCurso extends Struct.SingleTypeSchema {
+  collectionName: 'pagina_cursos';
+  info: {
+    displayName: 'P\u00E1gina_cursos';
+    pluralName: 'pagina-cursos';
+    singularName: 'pagina-curso';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    lista_cursos: Schema.Attribute.Component<'home-element.card-curso', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::pagina-curso.pagina-curso'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1083,9 +1084,9 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::curso.curso': ApiCursoCurso;
       'api::home.home': ApiHomeHome;
       'api::noticia.noticia': ApiNoticiaNoticia;
+      'api::pagina-curso.pagina-curso': ApiPaginaCursoPaginaCurso;
       'api::voluntaria.voluntaria': ApiVoluntariaVoluntaria;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

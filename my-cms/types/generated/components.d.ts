@@ -34,9 +34,6 @@ export interface HomeElementDepoimentos extends Struct.ComponentSchema {
     displayName: 'Depoimentos';
   };
   attributes: {
-    foto_aluna: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    >;
     nome_aluna: Schema.Attribute.String;
     texto_depoimento: Schema.Attribute.Text;
   };
