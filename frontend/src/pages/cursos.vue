@@ -98,7 +98,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Layout para garantir que o footer fique no final */
+/* Layout Global */
 .main-wrapper {
   display: flex;
   flex-direction: column;
@@ -107,10 +107,10 @@ onMounted(() => {
 
 .page-container {
   flex: 1;
-  max-width: 1000px;
+  max-width: 1200px; /* 🔥 Aumentei um pouco a largura total da página para caber cards maiores */
   width: 100%;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 60px 20px;
   text-align: center;
   font-family: 'Arial', sans-serif; 
 }
@@ -128,7 +128,7 @@ onMounted(() => {
 
 .subtitulo {
   color: #1b1814;
-  margin-bottom: 60px;
+  margin-bottom: 70px; /* Mais espaço antes dos cards */
   font-size: 1.1rem;
 }
 
@@ -138,55 +138,68 @@ onMounted(() => {
 .grid-cursos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 40px;
-  row-gap: 50px;
+  column-gap: 50px; /* 🔥 Espaço maior entre colunas */
+  row-gap: 50px;    /* 🔥 Espaço maior entre linhas */
   width: 100%;
-  box-sizing: border-box; /* Garante que o grid respeite limites */
+  box-sizing: border-box;
 }
 
 /* Card Wrapper */
 .card-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
   width: 100%;
 }
 
-/* O Card em si */
+/* --- O CARD GIGANTE --- */
 .card {
   width: 100%;
-  box-sizing: border-box; /* 🚨 CORREÇÃO CRUCIAL: Padding fica 'dentro' da largura */
+  box-sizing: border-box;
   background: #fffdfc;
   border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  padding: 15px 30px;
+  border-radius: 30px; /* 🔥 Bordas mais arredondadas */
+  
+  /* 🔥 AQUI ESTÁ O SEGREDO DO TAMANHO: */
+  min-height: 180px; 
+  padding: 0 40px; /* Zero em cima/baixo (o align-items centraliza), 40px nas laterais */
+  
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
+  justify-content: center; /* Centraliza o bloco todo */
+  gap: 30px; /* 🔥 Mais distância entre ícone e texto */
+  
   text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);/* Sombra mais suave e espalhada */
   transition: all 0.3s ease;
-  height: 90px;
-  position: relative; /* Necessário para z-index funcionar no hover */
+  position: relative;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  border-color: #800080;
-  box-shadow: 0 6px 15px rgba(128, 0, 128, 0.15);
-  z-index: 10; /* Evita que o card fique "atrás" de vizinhos ao mover */
+  transform: translateY(-5px);
+  border-color: #890d8e;
+ box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
+  z-index: 10;
 }
 
-/* Elementos internos do card */
-.icon-box { display: flex; align-items: center; justify-content: center; width: 40px; }
-.icon-img { width: 40px; height: auto; object-fit: contain; }
-.icon-placeholder { font-size: 24px; }
+/* Elementos internos */
+.icon-box { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  /* 🔥 Removemos a largura fixa do box para ele aceitar o ícone grande */
+}
+
+.icon-img { 
+  width: 80px; /* 🔥 Ícone bem maior (era 40px) */
+  height: auto; 
+  object-fit: contain; 
+}
+
+.icon-placeholder { font-size: 50px; }
 
 .nome-curso {
   color: #800080;
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* 🔥 Texto um pouco maior para acompanhar o card */
   font-weight: 900;
   text-transform: uppercase;
   margin: 0;
@@ -196,7 +209,11 @@ onMounted(() => {
 /* Responsividade */
 @media (max-width: 768px) {
   .grid-cursos {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Vira uma coluna só no celular */
+  }
+  .card {
+    min-height: 140px; /* Um pouco menor no celular para não ocupar a tela toda */
+    padding: 0 20px;
   }
   .titulo-principal {
     font-size: 2rem;
