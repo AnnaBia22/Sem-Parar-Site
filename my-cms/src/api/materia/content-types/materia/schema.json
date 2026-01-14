@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "materias",
+  "info": {
+    "singularName": "materia",
+    "pluralName": "materias",
+    "displayName": "Materia"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titulo": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "titulo"
+    },
+    "descricao": {
+      "type": "blocks"
+    },
+    "inscricoes": {
+      "type": "component",
+      "component": "cursos.card-inscricao",
+      "repeatable": true
+    },
+    "materiais": {
+      "type": "component",
+      "component": "cursos.card-material",
+      "repeatable": true
+    }
+  }
+}

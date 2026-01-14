@@ -12,6 +12,7 @@ const routes = [
   { path: '/fale-conosco', component: FaleConosco },
   // 2. ADICIONEI ESTA LINHA (Criando o endereço /cursos)
   { path: '/cursos', component: Cursos }, 
+  {path: '/cursos/:slug', name: 'Materia', component: () => import('../pages/materia.vue') },
   { path: '/noticias', component: () => import('../pages/noticias.vue') },
   { path: '/noticias/:id', component: () => import('../pages/noticia-interna.vue') }
 ]

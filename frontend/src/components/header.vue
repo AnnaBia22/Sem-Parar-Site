@@ -12,7 +12,7 @@
 
     <!-- ALTERAR FONTE -->
     <nav class="nav-links">
-  <router-link to="/#" class="nav-item">OLIMPÍADAS</router-link>
+  <router-link to="/cursos" class="nav-item">CURSOS</router-link>
   <router-link to="/noticias" class="nav-item">NOTÍCIAS</router-link>
   <router-link to="/quem-somos" class="nav-item">QUEM SOMOS</router-link>
   <router-link to="/fale-conosco" class="nav-item">FALE CONOSCO</router-link>

@@ -1,8 +1,6 @@
 <template>
   <div class="page-container">
-    <header class="header-simples">
-      <router-link to="/" class="link-voltar">⬅ Voltar para Home</router-link>
-    </header>
+    <Header />
 
     <main class="content">
       <div v-if="carregando" class="loading">
@@ -55,6 +53,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import Header from '../components/header.vue'
 import Footer from '../components/footer.vue'; // Verifique se o caminho está certo
 
 // --- VARIÁVEIS ---

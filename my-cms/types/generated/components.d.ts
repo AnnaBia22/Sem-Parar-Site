@@ -1,5 +1,29 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface CursosCardInscricao extends Struct.ComponentSchema {
+  collectionName: 'components_cursos_card_inscricaos';
+  info: {
+    displayName: 'Card Inscricao';
+  };
+  attributes: {
+    data_limite: Schema.Attribute.Date;
+    link: Schema.Attribute.String;
+    nome: Schema.Attribute.String;
+  };
+}
+
+export interface CursosCardMaterial extends Struct.ComponentSchema {
+  collectionName: 'components_cursos_card_materials';
+  info: {
+    displayName: 'Card Material';
+  };
+  attributes: {
+    semana: Schema.Attribute.String;
+    ttitulo: Schema.Attribute.String;
+    url_documento: Schema.Attribute.String;
+  };
+}
+
 export interface HomeElementBanner extends Struct.ComponentSchema {
   collectionName: 'components_home_element_banners';
   info: {
@@ -56,6 +80,8 @@ export interface HomeElementLinkMenu extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'cursos.card-inscricao': CursosCardInscricao;
+      'cursos.card-material': CursosCardMaterial;
       'home-element.banner': HomeElementBanner;
       'home-element.card-curso': HomeElementCardCurso;
       'home-element.depoimentos': HomeElementDepoimentos;
