@@ -11,16 +11,18 @@ const STRAPI_URL = 'http://localhost:1337';
 // Controles de Navegação
 const indiceDepoimento = ref(0);
 const indiceBanner = ref(0);
-let bannerTimer = null; // Variável para guardar o "robô" do banner
+let bannerTimer = null; 
 
 // --- BUSCAR DADOS NO STRAPI ---
 const buscarDados = async () => {
   try {
+    // AJUSTE 1: Removi '&populate[lista_depoimentos][populate]=foto_aluna'
+    // Agora pedimos apenas os dados do componente, sem tentar buscar a foto deletada
     const query = [
       '?populate[menu_navegacao]=*',
       '&populate[banner_destaques][populate]=imagem',
       '&populate[cursos_abertos][populate]=icon',
-      '&populate[lista_depoimentos][populate]=foto_aluna',
+      '&populate[lista_depoimentos]=*', 
       '&populate[Logo][fields]=url'
     ].join('');
     
@@ -31,7 +33,6 @@ const buscarDados = async () => {
     const json = await resposta.json();
     dadosHome.value = json.data.attributes || json.data;
 
-    // Assim que os dados chegam, ligamos o Banner Automático
     iniciarBannerAutomatico();
 
   } catch (e) {
@@ -77,8 +78,6 @@ const anteriorDepoimento = () => {
 // --- LÓGICA DO BANNER AUTOMÁTICO ---
 const proximoBanner = () => {
   if (!dadosHome.value?.banner_destaques) return;
-  
-  // Lógica circular (se for o último, volta pro zero)
   if (indiceBanner.value === dadosHome.value.banner_destaques.length - 1) {
     indiceBanner.value = 0;
   } else {
@@ -87,8 +86,6 @@ const proximoBanner = () => {
 };
 
 const iniciarBannerAutomatico = () => {
-  // CONFIGURAÇÃO: Troca de imagem a cada 8000 milissegundos (8 segundos)
-  // Antes estava 5000 (5 segundos)
   bannerTimer = setInterval(proximoBanner, 8000);
 };
 
@@ -98,7 +95,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  // Desliga o timer quando sair da página para não gastar memória
   if (bannerTimer) clearInterval(bannerTimer);
 });
 </script>
@@ -129,7 +125,6 @@ onUnmounted(() => {
       <section class="hero">
         <div class="container">
           <div class="banner-container" v-if="dadosHome.banner_destaques && dadosHome.banner_destaques.length > 0">
-            
             <Transition name="fade" mode="out-in">
               <img 
                 :key="indiceBanner" 
@@ -138,9 +133,7 @@ onUnmounted(() => {
                 alt="Banner"
               >
             </Transition>
-            
           </div>
-          
           <p class="hero-text">
             {{ dadosHome.texto_intro }}
           </p>
@@ -178,11 +171,11 @@ onUnmounted(() => {
             <div class="wrapper-fixo" v-if="dadosHome.lista_depoimentos && dadosHome.lista_depoimentos.length > 0">
               <Transition name="fade" mode="out-in">
                 <div class="content-wrapper" :key="indiceDepoimento">
-                  <img class="foto-aluna" :src="getImgUrl(dadosHome.lista_depoimentos[indiceDepoimento].foto_aluna)" alt="Foto da Aluna">
+                  
                   <div class="texto-wrapper">
                     <p class="testimonial-text">"{{ dadosHome.lista_depoimentos[indiceDepoimento].texto_depoimento }}"</p>
-                    <p class="aluna-nome" style="font-weight: bold; margin-top: 10px;">
-                        - {{ dadosHome.lista_depoimentos[indiceDepoimento].nome_aluna }}
+                    <p class="aluna-nome">
+                         {{ dadosHome.lista_depoimentos[indiceDepoimento].nome_aluna }}
                     </p>
                     <small style="color: #666; margin-top:5px; display:block;">
                       {{ indiceDepoimento + 1 }} / {{ dadosHome.lista_depoimentos.length }}
@@ -213,7 +206,6 @@ onUnmounted(() => {
 /* --- CONFIGURAÇÃO DA ANIMAÇÃO SUAVE --- */
 .fade-enter-active,
 .fade-leave-active {
-  /* Aumentado para 1.5s para criar o efeito suave e lento */
   transition: opacity 1.5s ease;
 }
 
@@ -222,216 +214,57 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-/* --- CONFIGURAÇÕES GERAIS --- */
+/* --- GERAL --- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
 
 .loading-state { text-align: center; padding: 20px; font-weight: bold; color: #666; }
-
-.landing-page {
-  font-family: 'Roboto', sans-serif;
-  width: 100%;
-  background-color: #fffff5;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.img-placeholder {
-  background-color: #eee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #aaa;
-}
+.landing-page { font-family: 'Roboto', sans-serif; width: 100%; background-color: #fffff5; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.img-placeholder { background-color: #eee; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #aaa; }
 
 /* --- HEADER --- */
 header { padding: 20px 0; }
-
-.header-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.logo {
-  width: 400px;
-  max-width: 100%;
-  margin-bottom: 0px;
-  object-fit: contain;
-}
-
-.nav-list {
-  list-style: none;
-  display: flex;
-  gap: 15px;
-  padding: 0;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.nav-item a {
-  background-color: #25074f;
-  color: #fffff5;
-  text-decoration: none;
-  width: 200px; 
-  height: 45px; 
-  display: flex; 
-  align-items: center;
-  justify-content: center;
-  border-radius: 25px;
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 1rem;
-  transition: background 0.3s;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-  text-align: center;
-}
-
+.header-content { display: flex; flex-direction: column; align-items: center; }
+.logo { width: 400px; max-width: 100%; margin-bottom: 0px; object-fit: contain; }
+.nav-list { list-style: none; display: flex; gap: 15px; padding: 0; flex-wrap: wrap; justify-content: center; }
+.nav-item a { background-color: #25074f; color: #fffff5; text-decoration: none; width: 200px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 25px; font-weight: bold; text-transform: uppercase; font-size: 1rem; transition: background 0.3s; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); text-align: center; }
 .nav-item a:hover { background-color: #3e0c85; }
 
 /* --- HERO SECTION --- */
 .hero { padding: 20px 0; text-align: center; }
-
-.banner-container {
-    /* Define altura mínima para o banner não "pular" na troca */
-    min-height: 300px; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.banner-img {
-  width: 100%;
-  max-width: 1200px;
-  object-fit: cover;
-  margin-bottom: 30px;
-  /* Garante que a imagem respeite a animação */
-  display: block; 
-}
-
-.hero-text {
-  color: #1b1814;
-  font-size: 1rem;
-  max-width: 800px;
-  margin: 0 auto;
-  line-height: 1.5;
-}
+.banner-container { min-height: 300px; display: flex; justify-content: center; align-items: center; }
+.banner-img { width: 100%; max-width: 1200px; object-fit: cover; margin-bottom: 30px; display: block; }
+.hero-text { color: #1b1814; font-size: 1rem; max-width: 800px; margin: 0 auto; line-height: 1.5; }
 
 /* --- INSCRIÇÕES --- */
-.inscricoes {
-  background-color: #25074f;
-  padding: 1px 0px 70px 0px;
-  margin-top: 10px;
-  width: 100%;
-}
-
-.text-orange {
-  color: #ff9a16;
-  margin-bottom: 30px;
-  font-size: 3.5rem;
-  text-align: center;
-}
-
-.cards-container {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-}
-
-.card {
-  background: #fffff5;
-  border-radius: 15px;
-  padding: 15px 40px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  width: 200px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
+.inscricoes { background-color: #25074f; padding: 1px 0px 70px 0px; margin-top: 10px; width: 100%; }
+.text-orange { color: #ff9a16; margin-bottom: 30px; font-size: 3.5rem; text-align: center; }
+.cards-container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+.card { background: #fffff5; border-radius: 15px; padding: 15px 40px; display: flex; align-items: center; gap: 15px; width: 200px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
 .card:hover { transform: translateY(-5px); }
-.card-title {
-  color: #890d8e;
-  font-weight: 900;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  display: block;
-}
-.btn-curso {
-    display: block;
-    margin-top: 5px;
-    font-size: 0.9rem;
-    color: #ff9a16; 
-    text-decoration: none;
-    font-weight: bold;
-}
+.card-title { color: #890d8e; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; display: block; }
+.btn-curso { display: block; margin-top: 5px; font-size: 0.9rem; color: #ff9a16; text-decoration: none; font-weight: bold; }
 
 /* --- DEPOIMENTOS --- */
-.depoimentos {
-  padding: 60px 0;
-  position: relative;
-  overflow: hidden; 
+.depoimentos { 
+  padding: 60px 0; 
+  position: relative; 
+  overflow: hidden;
 }
-
 .depoimentos-header { margin-bottom: 30px; padding-left: 50px; }
-
-@media (max-width: 768px) {
-  .depoimentos-header { padding-left: 0; text-align: center; }
-}
-
-.title-orange {
-  color: #ff9900;
-  font-size: 3.5rem;
-  margin: 0;
-  line-height: 1;
-}
-
-.title-purple {
-  color: #800080;
-  font-size: 3.5rem;
-  margin-left: 100px;
-  margin-top: 0px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.carousel-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-}
-
-.arrow-btn {
-  background: #ff9900;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.3s;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-  z-index: 2; 
-}
+.title-orange { color: #ff9900; font-size: 3.5rem; margin: 0; line-height: 1; }
+.title-purple { color: #800080; font-size: 3.5rem; margin-left: 100px; margin-top: 0px; font-weight: 900; text-transform: uppercase; }
+.carousel-container { display: flex; align-items: center; justify-content: center; gap: 30px; }
+.arrow-btn { background: #ff9900; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.3s; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index: 2; }
 .arrow-btn:hover { background: #e68a00; transform: translateY(-2px); }
 .arrow-btn img { width: 15px; height: auto; }
 
-/* Wrapper Fixo para evitar que a altura mude durante a animação */
+/* Wrapper Fixo */
 .wrapper-fixo {
   position: relative;
-  width: 900px; /* Largura máxima do conteúdo */
+  width: 900px;
   max-width: 100%;
-  min-height: 350px; /* Altura mínima estimada do depoimento */
+  min-height: 250px; /* Reduzi um pouco a altura mínima pois sem foto ocupa menos verticalmente */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -440,52 +273,41 @@ header { padding: 20px 0; }
 .content-wrapper {
   display: flex;
   align-items: center;
-  gap: 30px;
   width: 100%;
   justify-content: center;
 }
 
-.foto-aluna {
-  width: 300px;
-  border-radius: 30px;
-  object-fit: cover;
-  flex-shrink: 0;
+/* AJUSTE 2: TEXTO ALONGADO E CENTRALIZADO */
+.texto-wrapper {
+  max-width: 850px; /* Aumentei de 500px para 850px para alongar o texto */
+  width: 100%;
+  text-align: center; /* Centralizei para ficar mais bonito sem a foto ao lado */
 }
 
 .testimonial-text {
   color: #1b1814;
   line-height: 1.6;
-  font-size: 1rem;
-  text-align: left;
-}
-.texto-wrapper {
-    max-width: 500px;
+  font-size: 1.1rem;
+  text-align: center; /* Garante que o texto fique centralizado */
 }
 
-/* Elemento decorativo */
-.decorative-element {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
+.aluna-nome {
+  font-weight: bold;
+  margin-top: 20px;
+  display: block;
+  text-transform: uppercase;
 }
 
-.deco-img {
-  width: 150px;
-  height: 150px;
-  border-radius: 0 100% 0 0;
-}
+.decorative-element { position: absolute; bottom: 0; left: 0; z-index: -1; }
+.deco-img { width: 150px; height: 150px; border-radius: 0 100% 0 0; }
 
 /* Responsividade Mobile */
 @media (max-width: 768px) {
+  .depoimentos-header { padding-left: 0; text-align: center; }
   .content-wrapper { flex-direction: column; text-align: center; }
-  .testimonial-text { text-align: center; }
   .nav-list { flex-direction: column; width: 100%; }
   .nav-item a { width: 100%; max-width: 300px; }
   .title-orange, .title-purple { font-size: 2rem; }
-  
-  .wrapper-fixo {
-      min-height: 500px; /* Mais altura no mobile pois empilha */
-  }
+  .wrapper-fixo { min-height: 350px; }
 }
 </style>

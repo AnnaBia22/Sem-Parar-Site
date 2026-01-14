@@ -1,22 +1,16 @@
 {
   "kind": "singleType",
-  "collectionName": "cursos",
+  "collectionName": "pagina_cursos",
   "info": {
-    "singularName": "curso",
-    "pluralName": "cursos",
-    "displayName": "Cursos"
+    "singularName": "pagina-curso",
+    "pluralName": "pagina-cursos",
+    "displayName": "Página_cursos"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "titulo_principal": {
-      "type": "string"
-    },
-    "subtitulo": {
-      "type": "text"
-    },
     "lista_cursos": {
       "type": "component",
       "component": "home-element.card-curso",
