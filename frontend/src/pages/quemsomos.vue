@@ -122,7 +122,7 @@ const nomesCategorias = {
 
 onMounted(async () => {
   try {
-    const res = await axios.get(`${baseUrl}/api/voluntarias?populate=*`)
+    const res = await axios.get(`${baseUrl}/api/voluntarias?populate=*&pagination[pageSize]=100`)
     voluntarias.value = Array.isArray(res.data.data) ? res.data.data : []
   } catch (error) {
     console.error("Erro ao buscar dados:", error)
