@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import Header from '../components/header.vue';
-import Footer from '../components/footer.vue';
+import Header from '../components/header.vue'
+import Footer from '../components/footer.vue'; // Verifique se o caminho está certo
 
 const urlBase = 'http://localhost:1337';
 // Populate profundo para garantir que a imagem venha

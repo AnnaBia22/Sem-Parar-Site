@@ -463,6 +463,38 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiMateriaMateria extends Struct.CollectionTypeSchema {
+  collectionName: 'materias';
+  info: {
+    displayName: 'Materia';
+    pluralName: 'materias';
+    singularName: 'materia';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    descricao: Schema.Attribute.Blocks;
+    inscricoes: Schema.Attribute.Component<'cursos.card-inscricao', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::materia.materia'
+    > &
+      Schema.Attribute.Private;
+    materiais: Schema.Attribute.Component<'cursos.card-material', true>;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'titulo'>;
+    titulo: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiNoticiaNoticia extends Struct.CollectionTypeSchema {
   collectionName: 'noticias';
   info: {
@@ -1085,6 +1117,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::home.home': ApiHomeHome;
+      'api::materia.materia': ApiMateriaMateria;
       'api::noticia.noticia': ApiNoticiaNoticia;
       'api::pagina-curso.pagina-curso': ApiPaginaCursoPaginaCurso;
       'api::voluntaria.voluntaria': ApiVoluntariaVoluntaria;

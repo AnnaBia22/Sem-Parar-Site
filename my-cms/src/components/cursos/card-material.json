@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_cursos_card_materials",
+  "info": {
+    "displayName": "Card Material"
+  },
+  "options": {},
+  "attributes": {
+    "semana": {
+      "type": "string"
+    },
+    "ttitulo": {
+      "type": "string"
+    },
+    "url_documento": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

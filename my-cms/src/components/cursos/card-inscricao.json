@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_cursos_card_inscricaos",
+  "info": {
+    "displayName": "Card Inscricao"
+  },
+  "options": {},
+  "attributes": {
+    "nome": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string"
+    },
+    "data_limite": {
+      "type": "date"
+    }
+  },
+  "config": {}
+}

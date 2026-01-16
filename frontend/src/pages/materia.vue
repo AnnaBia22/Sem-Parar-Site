@@ -3,75 +3,73 @@
 
   <LoadingStatus v-if="loading" />
 
-  <main class="container" v-else-if="materia">
-    <section class="intro">
-      <h1 class="titulo-principal">{{ materia.attributes.titulo }}</h1>
-      
-      <div class="descricao-box">
-        <p v-for="(p, i) in textoCoordenacao" :key="i">{{ p }}</p>
-      </div>
-    </section>
+  <template v-else>
+    <main class="container" v-if="materia">
+      <section class="intro">
+       <h1 class="titulo-principal">
+  {{ materia.attributes?.titulo || materia.titulo || "Título não encontrado" }}
+</h1>
+        <div class="descricao-box">
+          <p v-for="(p, i) in textoCoordenacao" :key="i">{{ p }}</p>
+        </div>
+      </section>
 
-    <section class="secao-abas">
-      <div class="abas-container">
-        <button 
-          :class="['tab-btn', { active: abaAtiva === 'inscricoes' }]" 
-          @click="abaAtiva = 'inscricoes'"
-        >
-          INSCRIÇÕES ABERTAS
-        </button>
-        <button 
-          :class="['tab-btn', { active: abaAtiva === 'materiais' }]" 
-          @click="abaAtiva = 'materiais'"
-        >
-          MATERIAIS E PUBLICAÇÕES
-        </button>
-      </div>
+      <section class="secao-abas">
+        <div class="abas-container">
+          <button :class="['tab-btn', { active: abaAtiva === 'inscricoes' }]" @click="abaAtiva = 'inscricoes'">
+            INSCRIÇÕES ABERTAS
+          </button>
+          <button :class="['tab-btn', { active: abaAtiva === 'materiais' }]" @click="abaAtiva = 'materiais'">
+            MATERIAIS E EXERCÍCIOS
+          </button>
+        </div>
 
-      <div class="conteudo-aba">
-        
-        <div v-if="abaAtiva === 'inscricoes'" class="fade-in">
-          <h2 class="titulo-roxo">Cursos Disponíveis</h2>
-          
-          <div v-if="materia.attributes.inscricoes?.length > 0" class="lista-itens">
-            <div v-for="item in materia.attributes.inscricoes" :key="item.id" class="card-item">
-              <div class="info">
-                <strong>{{ item.nome }}</strong>
-                <span>Prazo: {{ item.data_limite }}</span>
+        <div class="conteudo-aba">
+          <div v-if="abaAtiva === 'inscricoes'" class="fade-in">
+            <h2 class="titulo-roxo">Cursos Disponíveis</h2>
+            <div v-if="materia.attributes?.inscricoes?.length > 0" class="lista-itens">
+              <div v-for="item in materia.attributes.inscricoes" :key="item.id" class="card-item">
+                <div class="info">
+                  <strong>{{ item.nome }}</strong>
+                  <span>Prazo: {{ item.data_limite }}</span>
+                </div>
+                <a :href="item.link" target="_blank" class="btn-acao btn-verde">INSCREVER-SE</a>
               </div>
-              <a :href="item.link" target="_blank" class="btn-acao btn-verde">INSCREVER-SE</a>
+            </div>
+            <div v-else class="aviso-vazio">
+              <p>No momento, não temos inscrições abertas para esta matéria.</p>
             </div>
           </div>
 
-          <div v-else class="aviso-vazio">
-            <img src="/icons/alert-circle.svg" alt="Aviso" />
-            <p>No momento, não temos inscrições abertas para esta matéria.</p>
-            <span>Fique de olho em nossas redes sociais para futuras turmas!</span>
-          </div>
-        </div>
-
-        <div v-if="abaAtiva === 'materiais'" class="fade-in">
-          <h2 class="titulo-roxo">Materiais de Estudo</h2>
-          <div v-if="materia.attributes.materiais?.length > 0" class="lista-itens">
-            <div v-for="material in materia.attributes.materiais" :key="material.id" class="card-item">
-              <div class="info">
-                <strong>{{ material.semana }} - {{ material.titulo }}</strong>
+          <div v-if="abaAtiva === 'materiais'" class="fade-in">
+            <h2 class="titulo-roxo">Materiais de Estudo</h2>
+            <div v-if="materia.attributes?.materiais?.length > 0" class="lista-itens">
+              <div v-for="material in materia.attributes.materiais" :key="material.id" class="card-item">
+                <div class="info">
+                  <strong>{{ material.semana }} - {{ material.titulo }}</strong>
+                </div>
+                <a :href="material.url_documento" class="btn-acao btn-roxo" target="_blank">DOWNLOAD</a>
               </div>
-              <a :href="material.url_documento" class="btn-acao btn-roxo" target="_blank">DOWNLOAD</a>
             </div>
+            <p v-else class="aviso-vazio">Os materiais serão publicados em breve.</p>
           </div>
-          <p v-else class="aviso-vazio">Os materiais serão publicados em breve.</p>
         </div>
+      </section>
+    </main>
 
+    <main class="container" v-else>
+      <div class="aviso-vazio">
+        <h2>Matéria "{{ $route.params.slug }}" não encontrada.</h2>
+        <p>Verifique se o slug no Strapi está correto.</p>
       </div>
-    </section>
-  </main>
+    </main>
+  </template>
 
   <Footer />
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import Header from '../components/header.vue'
@@ -84,42 +82,53 @@ const materia = ref(null)
 const loading = ref(true)
 const abaAtiva = ref('inscricoes')
 
-// Pega o texto da coordenação tratando o formato de Rich Text do Strapi
-const textoCoordenacao = computed(() => {
-  const desc = materia.value?.attributes?.descricao
-  if (!desc) return []
-  // Se for array (formato novo Strapi), mapeia os textos. Se for string, coloca em array.
-  return Array.isArray(desc) ? desc.map(block => block.children[0].text) : [desc]
-})
-
-onMounted(async () => {
+const fetchData = async () => {
+  loading.value = true
+  materia.value = null // Reseta o estado antes da busca
   try {
-    // Busca a matéria filtrando pelo título ou slug via URL
-    // Ex: /olimpiadas/informatica -> busca a matéria com slug 'informatica'
-    const slug = route.params.slug || 'matematica' 
-    const res = await axios.get(`${baseUrl}/api/materias?filters[slug][$eq]=${slug}&populate=*`)
+    const slugDaUrl = route.params.slug?.trim().toLowerCase()
+    const res = await axios.get(`${baseUrl}/api/materias?populate=*`)
     
-    if (res.data.data.length > 0) {
-      materia.value = res.data.data[0]
+    if (res.data?.data) {
+      const encontrada = res.data.data.find(m => {
+        const s = (m.attributes?.slug || m.slug)?.toString().trim().toLowerCase()
+        return s === slugDaUrl
+      })
+      if (encontrada) {
+        materia.value = encontrada
+      }
     }
   } catch (error) {
-    console.error("Erro ao carregar matéria:", error)
+    console.error("Erro:", error)
   } finally {
     loading.value = false
   }
+}
+
+const textoCoordenacao = computed(() => {
+  const desc = materia.value?.attributes?.descricao || materia.value?.descricao
+  if (!desc) return ["Conteúdo em breve..."]
+  if (Array.isArray(desc)) {
+    return desc.map(block => block.children ? block.children.map(c => c.text).join('') : "").filter(t => t.trim() !== "")
+  }
+  return [desc]
 })
+
+onMounted(fetchData)
+watch(() => route.params.slug, fetchData)
 </script>
 
 <style scoped>
 /* Estilos baseados no seu "Quem Somos" */
 .container { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 40px 60px; font-family: 'Ruda', sans-serif; }
 
-.titulo-principal { 
-  font-family: 'Sugo Display', sans-serif; 
-  color: #ff9a16; 
-  font-size: 3.5rem; 
-  text-align: center; 
-  text-transform: uppercase;
+.titulo-principal {
+  font-family: 'Sugo Display', sans-serif; /* Mesma fonte */
+  color: #ff9a16;                          /* Mesmo laranja */
+  font-size: 2.8rem;                       /* Mesmo tamanho do Quem Somos */
+  margin: 0 0 25px 0;                      /* Mesmo espaçamento */
+  text-align: center;                      /* Centralizado */
+  text-transform: uppercase;               /* Reforço para caixa alta */
 }
 
 .descricao-box { max-width: 850px; margin: 0 auto 50px; text-align: center; color: #444; line-height: 1.6; }
