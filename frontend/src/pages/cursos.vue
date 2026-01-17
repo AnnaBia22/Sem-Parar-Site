@@ -1,31 +1,33 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import Header from '../components/header.vue'
-import Footer from '../components/footer.vue'; // Verifique se o caminho está certo
+import Footer from '../components/footer.vue'; 
+import LoadingStatus from '../components/loading.vue' 
+import axios from 'axios'
 
 const urlBase = 'http://localhost:1337';
-// Populate profundo para garantir que a imagem venha
-const apiEndpoint = '/api/pagina-curso?populate[lista_cursos][populate]=*'; 
+const apiEndpoint = '/api/pagina-curso?populate[lista_cursos][populate]=*';
 
 const cursos = ref([]);
 const loading = ref(true);
 const erro = ref(null);
 
-// --- FUNÇÃO CORRETORA DE IMAGENS ---
-// Essa função resolve o problema do aninhamento (data.attributes)
-const getImagemUrl = (icone) => {
-  if (!icone) return null;
-
-  // Caso 1: Strapi v4 Padrão (dentro de data -> attributes)
-  if (icone.data && icone.data.attributes) {
-    return `${urlBase}${icone.data.attributes.url}`;
-  }
+// LOCAL: Dentro do <script setup>
+const getImagemUrl = (curso) => {
+  // Tenta encontrar o campo de imagem por vários nomes possíveis
+  const imgObj = curso.icon || curso.icone || curso.logo || curso.imagem;
   
-  // Caso 2: Strapi v5 ou achatado (direto na url)
-  if (icone.url) {
-    return `${urlBase}${icone.url}`;
-  }
+  if (!imgObj) return null;
 
+  // Tenta extrair a URL de todos os formatos que o Strapi costuma enviar
+  const url = imgObj.url || 
+              imgObj.data?.url || 
+              imgObj.data?.attributes?.url || 
+              imgObj.attributes?.url;
+
+  if (url) {
+    return url.startsWith('http') ? url : `${urlBase}${url}`;
+  }
   return null;
 };
 
@@ -33,7 +35,6 @@ const fetchCursos = async () => {
   try {
     let req = await fetch(`${urlBase}${apiEndpoint}`);
     
-    // Fallback Singular/Plural
     if (req.status === 404) {
       req = await fetch(`${urlBase}/api/pagina-cursos?populate[lista_cursos][populate]=*`);
     }
@@ -42,7 +43,6 @@ const fetchCursos = async () => {
     
     const res = await req.json();
     
-    // Processamento da resposta (v4 vs v5)
     if (res.data && res.data.lista_cursos) {
         cursos.value = res.data.lista_cursos;
     } else if (res.data && res.data.attributes && res.data.attributes.lista_cursos) {
@@ -67,12 +67,12 @@ onMounted(() => {
 <template>
   <div class="main-wrapper">
     <Header />
-    <div class="page-container">
+    <LoadingStatus v-if="loading" />
+    <div v-else class="page-container">
       <h1 class="titulo-principal">CURSOS</h1>
       <p class="subtitulo">Conheça as matérias em que temos cursos disponíveis focados em olimpíadas!</p>
 
-      <div v-if="loading" class="aviso">🔄 Carregando...</div>
-      <div v-else-if="erro" class="aviso erro">⚠️ {{ erro }}</div>
+      <div v-if="erro" class="aviso erro">⚠️ {{ erro }}</div>
       
       <div v-else class="grid-cursos">
         <div v-for="curso in cursos" :key="curso.id" class="card-wrapper">
@@ -80,11 +80,11 @@ onMounted(() => {
           <a :href="curso.link_pag" class="card">
             <div class="icon-box">
                <img 
-                v-if="getImagemUrl(curso.icon)" 
-                :src="getImagemUrl(curso.icon)" 
-                alt="" 
-                class="icon-img"
-              />
+                v-if="getImagemUrl(curso)" 
+                :src="getImagemUrl(curso)" 
+                 alt="Logo do curso" 
+                 class="icon-img"
+                />
               <span v-else class="icon-placeholder">📚</span>
             </div>
             <h2 class="nome-curso">{{ curso.nome_curso }}</h2>
@@ -98,7 +98,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Layout Global */
 .main-wrapper {
   display: flex;
   flex-direction: column;
@@ -107,7 +106,7 @@ onMounted(() => {
 
 .page-container {
   flex: 1;
-  max-width: 1200px; /* 🔥 Aumentei um pouco a largura total da página para caber cards maiores */
+  max-width: 1200px; 
   width: 100%;
   margin: 0 auto;
   padding: 60px 20px;
@@ -115,83 +114,74 @@ onMounted(() => {
   font-family: 'Arial', sans-serif; 
 }
 
-/* Tipografia */
 .titulo-principal {
-  color: #ff9900;
-  font-size: 3rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  margin-top: 0px;
-  letter-spacing: 1px;
+  font-family: 'Sugo Display', sans-serif;
+  color: #ff9a16;
+  font-size: 2.8rem;
+  margin: 0 0 25px 0; 
+  text-align: center;
 }
 
 .subtitulo {
   color: #1b1814;
-  margin-bottom: 70px; /* Mais espaço antes dos cards */
+  margin-bottom: 70px; 
   font-size: 1.1rem;
 }
 
 .aviso { margin: 20px; color: #676464; }
 
-/* Grid */
 .grid-cursos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 50px; /* 🔥 Espaço maior entre colunas */
-  row-gap: 50px;    /* 🔥 Espaço maior entre linhas */
+  column-gap: 50px; 
+  row-gap: 50px;    
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Card Wrapper */
 .card-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-/* --- O CARD GIGANTE --- */
 .card {
   width: 100%;
   box-sizing: border-box;
   background: #fffdfc;
   border: 1px solid #e0e0e0;
-  border-radius: 30px; /* 🔥 Bordas mais arredondadas */
-  
-  /* 🔥 AQUI ESTÁ O SEGREDO DO TAMANHO: */
+  border-radius: 30px; 
   min-height: 180px; 
-  padding: 0 40px; /* Zero em cima/baixo (o align-items centraliza), 40px nas laterais */
-  
+  padding: 0 40px; 
   display: flex;
   align-items: center;
-  justify-content: center; /* Centraliza o bloco todo */
-  gap: 30px; /* 🔥 Mais distância entre ícone e texto */
-  
+  justify-content: center; 
+  gap: 30px; 
   text-decoration: none;
-  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);/* Sombra mais suave e espalhada */
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
   position: relative;
+  
+  /* 🔥 ALTERAÇÃO: Curso 5px mais para cima */
+  margin-top: -5px; 
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px); /* Aumentado o hover para compensar o margin negativo */
   border-color: #890d8e;
- box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
   z-index: 10;
 }
 
-/* Elementos internos */
 .icon-box { 
   display: flex; 
   align-items: center; 
   justify-content: center; 
-  /* 🔥 Removemos a largura fixa do box para ele aceitar o ícone grande */
 }
 
 .icon-img { 
-  width: 80px; /* 🔥 Ícone bem maior (era 40px) */
-  height: auto; 
+  width: 80px; 
+  height: 80px; /* Definido altura fixa para garantir que apareça bem ao lado do texto */
   object-fit: contain; 
 }
 
@@ -199,21 +189,21 @@ onMounted(() => {
 
 .nome-curso {
   color: #800080;
-  font-size: 1.8rem; /* 🔥 Texto um pouco maior para acompanhar o card */
+  font-size: 1.8rem; 
   font-weight: 900;
   text-transform: uppercase;
   margin: 0;
   letter-spacing: 0.5px;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .grid-cursos {
-    grid-template-columns: 1fr; /* Vira uma coluna só no celular */
+    grid-template-columns: 1fr; 
   }
   .card {
-    min-height: 140px; /* Um pouco menor no celular para não ocupar a tela toda */
+    min-height: 140px; 
     padding: 0 20px;
+    margin-top: 0; /* No mobile remove o margin negativo se desejar padrão */
   }
   .titulo-principal {
     font-size: 2rem;
