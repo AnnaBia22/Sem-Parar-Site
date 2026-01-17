@@ -1,29 +1,35 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import Header from '../components/header.vue'
-import Footer from '../components/footer.vue'; // Verifique se o caminho está certo
+import Footer from '../components/footer.vue'; 
 
 const urlBase = 'http://localhost:1337';
-// Populate profundo para garantir que a imagem venha
 const apiEndpoint = '/api/pagina-curso?populate[lista_cursos][populate]=*'; 
 
 const cursos = ref([]);
 const loading = ref(true);
 const erro = ref(null);
 
-// --- FUNÇÃO CORRETORA DE IMAGENS ---
-// Essa função resolve o problema do aninhamento (data.attributes)
 const getImagemUrl = (icone) => {
   if (!icone) return null;
 
-  // Caso 1: Strapi v4 Padrão (dentro de data -> attributes)
-  if (icone.data && icone.data.attributes) {
-    return `${urlBase}${icone.data.attributes.url}`;
+  let url = null;
+
+  if (Array.isArray(icone) && icone.length > 0) {
+    url = icone[0].url;
+  } else if (icone.data) {
+    if (Array.isArray(icone.data) && icone.data.length > 0) {
+        url = icone.data[0].attributes.url;
+    } else if (icone.data.attributes) {
+        url = icone.data.attributes.url;
+    }
+  } else if (icone.url) {
+    url = icone.url;
   }
-  
-  // Caso 2: Strapi v5 ou achatado (direto na url)
-  if (icone.url) {
-    return `${urlBase}${icone.url}`;
+
+  if (url) {
+    if (url.startsWith('http')) return url;
+    return `${urlBase}${url}`;
   }
 
   return null;
@@ -31,31 +37,20 @@ const getImagemUrl = (icone) => {
 
 const fetchCursos = async () => {
   try {
-    let req = await fetch(`${urlBase}${apiEndpoint}`);
-    
-    // Fallback Singular/Plural
-    if (req.status === 404) {
-      req = await fetch(`${urlBase}/api/pagina-cursos?populate[lista_cursos][populate]=*`);
-    }
-
+    const req = await fetch(`${urlBase}${apiEndpoint}`);
     if (!req.ok) throw new Error(`Erro API: ${req.status}`);
-    
     const res = await req.json();
     
-    // Processamento da resposta (v4 vs v5)
-    if (res.data && res.data.lista_cursos) {
-        cursos.value = res.data.lista_cursos;
-    } else if (res.data && res.data.attributes && res.data.attributes.lista_cursos) {
-        cursos.value = res.data.attributes.lista_cursos;
-    } else {
-        erro.value = "Dados não encontrados.";
-    }
+    if (res.data) {
+        const lista = res.data.attributes?.lista_cursos || res.data.lista_cursos;
+        if (lista) cursos.value = lista;
+    } 
 
   } catch (error) {
     console.error("Erro:", error);
-    erro.value = "Falha na conexão com o Strapi.";
+    erro.value = "Erro ao carregar.";
   } finally {
-    loading.value = false;
+    setTimeout(() => { loading.value = false; }, 500);
   }
 };
 
@@ -71,25 +66,29 @@ onMounted(() => {
       <h1 class="titulo-principal">CURSOS</h1>
       <p class="subtitulo">Conheça as matérias em que temos cursos disponíveis focados em olimpíadas!</p>
 
-      <div v-if="loading" class="aviso">🔄 Carregando...</div>
-      <div v-else-if="erro" class="aviso erro">⚠️ {{ erro }}</div>
+      <div v-if="loading" class="loader-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Carregando...</p>
+      </div>
       
+      <div v-else-if="erro" class="aviso erro">⚠️ {{ erro }}</div>
+
       <div v-else class="grid-cursos">
         <div v-for="curso in cursos" :key="curso.id" class="card-wrapper">
-          
           <a :href="curso.link_pag" class="card">
+            
             <div class="icon-box">
-               <img 
+              <img 
                 v-if="getImagemUrl(curso.icon)" 
                 :src="getImagemUrl(curso.icon)" 
-                alt="" 
+                alt="icone" 
                 class="icon-img"
               />
               <span v-else class="icon-placeholder">📚</span>
             </div>
+            
             <h2 class="nome-curso">{{ curso.nome_curso }}</h2>
           </a>
-
         </div>
       </div>
     </div>
@@ -98,7 +97,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Layout Global */
 .main-wrapper {
   display: flex;
   flex-direction: column;
@@ -107,7 +105,7 @@ onMounted(() => {
 
 .page-container {
   flex: 1;
-  max-width: 1200px; /* 🔥 Aumentei um pouco a largura total da página para caber cards maiores */
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding: 60px 20px;
@@ -115,7 +113,6 @@ onMounted(() => {
   font-family: 'Arial', sans-serif; 
 }
 
-/* Tipografia */
 .titulo-principal {
   color: #ff9900;
   font-size: 3rem;
@@ -128,69 +125,97 @@ onMounted(() => {
 
 .subtitulo {
   color: #1b1814;
-  margin-bottom: 70px; /* Mais espaço antes dos cards */
+  margin-bottom: 70px;
   font-size: 1.1rem;
 }
 
-.aviso { margin: 20px; color: #676464; }
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 50px 0;
+}
 
-/* Grid */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ff9900;
+  border-top: 5px solid #800080;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+.loading-text {
+  color: #890d8e;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.aviso.erro {
+    color: red;
+    font-weight: bold;
+    background: #fff0f0;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
 .grid-cursos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 50px; /* 🔥 Espaço maior entre colunas */
-  row-gap: 50px;    /* 🔥 Espaço maior entre linhas */
+  column-gap: 50px;
+  row-gap: 50px;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Card Wrapper */
 .card-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-/* --- O CARD GIGANTE --- */
 .card {
   width: 100%;
   box-sizing: border-box;
   background: #fffdfc;
   border: 1px solid #e0e0e0;
-  border-radius: 30px; /* 🔥 Bordas mais arredondadas */
-  
-  /* 🔥 AQUI ESTÁ O SEGREDO DO TAMANHO: */
+  border-radius: 30px;
   min-height: 180px; 
-  padding: 0 40px; /* Zero em cima/baixo (o align-items centraliza), 40px nas laterais */
-  
+  padding: 0 40px;
   display: flex;
   align-items: center;
-  justify-content: center; /* Centraliza o bloco todo */
-  gap: 30px; /* 🔥 Mais distância entre ícone e texto */
-  
+  justify-content: center;
+  gap: 30px;
   text-decoration: none;
-  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);/* Sombra mais suave e espalhada */
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
   position: relative;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  border-color: #890d8e;
- box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
+  border-color: #8a0d8e25;
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
   z-index: 10;
 }
 
-/* Elementos internos */
 .icon-box { 
   display: flex; 
   align-items: center; 
   justify-content: center; 
-  /* 🔥 Removemos a largura fixa do box para ele aceitar o ícone grande */
 }
 
 .icon-img { 
-  width: 80px; /* 🔥 Ícone bem maior (era 40px) */
+  width: 80px;
   height: auto; 
   object-fit: contain; 
 }
@@ -199,20 +224,19 @@ onMounted(() => {
 
 .nome-curso {
   color: #800080;
-  font-size: 1.8rem; /* 🔥 Texto um pouco maior para acompanhar o card */
+  font-size: 1.8rem;
   font-weight: 900;
   text-transform: uppercase;
   margin: 0;
   letter-spacing: 0.5px;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .grid-cursos {
-    grid-template-columns: 1fr; /* Vira uma coluna só no celular */
+    grid-template-columns: 1fr;
   }
   .card {
-    min-height: 140px; /* Um pouco menor no celular para não ocupar a tela toda */
+    min-height: 140px;
     padding: 0 20px;
   }
   .titulo-principal {
