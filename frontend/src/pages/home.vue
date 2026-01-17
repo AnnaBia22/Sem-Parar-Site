@@ -133,9 +133,6 @@ onUnmounted(() => {
               >
             </Transition>
           </div>
-          <p class="hero-text">
-            {{ dadosHome.texto_intro }}
-          </p>
         </div>
       </section>
 
