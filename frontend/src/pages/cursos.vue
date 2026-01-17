@@ -3,58 +3,40 @@ import { ref, onMounted } from 'vue';
 import Header from '../components/header.vue'
 import Footer from '../components/footer.vue'; 
 import LoadingStatus from '../components/loading.vue' 
-import axios from 'axios'
 
 const urlBase = 'http://localhost:1337';
-const apiEndpoint = '/api/pagina-curso?populate[lista_cursos][populate]=*';
+// Endpoint com populate profundo para garantir que o 'icon' venha com a 'url'
+const apiEndpoint = '/api/pagina-curso?populate[lista_cursos][populate][icon][populate]=*';
 
 const cursos = ref([]);
 const loading = ref(true);
 const erro = ref(null);
 
-// LOCAL: Dentro do <script setup>
+// Função para extrair a URL da imagem do objeto do Strapi
 const getImagemUrl = (curso) => {
-  // Tenta encontrar o campo de imagem por vários nomes possíveis
-  const imgObj = curso.icon || curso.icone || curso.logo || curso.imagem;
+  if (!curso || !curso.icon) return null;
   
-  if (!imgObj) return null;
+  // Acessa o caminho data -> attributes -> url (padrão do Strapi v4/v5)
+  const path = curso.icon.data?.attributes?.url || curso.icon.url || curso.icon.data?.url;
 
-  // Tenta extrair a URL de todos os formatos que o Strapi costuma enviar
-  const url = imgObj.url || 
-              imgObj.data?.url || 
-              imgObj.data?.attributes?.url || 
-              imgObj.attributes?.url;
-
-  if (url) {
-    return url.startsWith('http') ? url : `${urlBase}${url}`;
-  }
-  return null;
+  if (!path) return null;
+  return path.startsWith('http') ? path : `${urlBase}${path}`;
 };
 
 const fetchCursos = async () => {
   try {
-    let req = await fetch(`${urlBase}${apiEndpoint}`);
-    
-    if (req.status === 404) {
-      req = await fetch(`${urlBase}/api/pagina-cursos?populate[lista_cursos][populate]=*`);
-    }
-
+    const req = await fetch(`${urlBase}${apiEndpoint}`);
     if (!req.ok) throw new Error(`Erro API: ${req.status}`);
-    const res = await req.json();
     
-    if (res.data && res.data.lista_cursos) {
-        cursos.value = res.data.lista_cursos;
-    } else if (res.data && res.data.attributes && res.data.attributes.lista_cursos) {
-        cursos.value = res.data.attributes.lista_cursos;
-    } else {
-        erro.value = "Dados não encontrados.";
-    }
-
+    const res = await req.json();
+    // Extrai a lista de cursos tratando a estrutura do Single Type
+    const dados = res.data?.attributes?.lista_cursos || res.data?.lista_cursos;
+    cursos.value = dados || [];
   } catch (error) {
-    console.error("Erro:", error);
-    erro.value = "Erro ao carregar.";
+    console.error("Erro ao carregar cursos:", error);
+    erro.value = "Erro ao carregar os dados.";
   } finally {
-    setTimeout(() => { loading.value = false; }, 500);
+    loading.value = false;
   }
 };
 
@@ -76,17 +58,14 @@ onMounted(() => {
       <div v-else class="grid-cursos">
         <div v-for="curso in cursos" :key="curso.id" class="card-wrapper">
           <a :href="curso.link_pag" class="card">
-            
             <div class="icon-box">
-               <img 
+              <img 
                 v-if="getImagemUrl(curso)" 
                 :src="getImagemUrl(curso)" 
-                 alt="Logo do curso" 
-                 class="icon-img"
-                />
-              <span v-else class="icon-placeholder">📚</span>
+                alt="Logo do curso" 
+                class="icon-img"
+              />
             </div>
-            
             <h2 class="nome-curso">{{ curso.nome_curso }}</h2>
           </a>
         </div>
@@ -118,7 +97,6 @@ onMounted(() => {
   color: #ff9a16;
   font-size: 2.8rem;
   margin: 0 0 25px 0; 
-  text-align: center;
 }
 
 .subtitulo {
@@ -126,8 +104,6 @@ onMounted(() => {
   margin-bottom: 70px; 
   font-size: 1.1rem;
 }
-
-.aviso { margin: 20px; color: #676464; }
 
 .grid-cursos {
   display: grid;
@@ -151,41 +127,42 @@ onMounted(() => {
   border: 1px solid #e0e0e0;
   border-radius: 30px; 
   min-height: 180px; 
-  padding: 0 40px; 
+  padding: 0 50px; 
+  
+  /* Alinhamento Horizontal (Ícone e depois Texto) */
   display: flex;
   align-items: center;
-  justify-content: center; 
-  gap: 30px; 
+  justify-content: flex-start; /* Alinha tudo à esquerda */
+  gap: 30px; /* Espaço entre a logo e o texto */
+  
   text-decoration: none;
-  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
   box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
   position: relative;
-  
-  /* 🔥 ALTERAÇÃO: Curso 5px mais para cima */
+
+  /* Alteração solicitada: 5px para cima */
   margin-top: -5px; 
 }
 
 .card:hover {
-  transform: translateY(-10px); /* Aumentado o hover para compensar o margin negativo */
+  transform: translateY(-10px);
   border-color: #890d8e;
-  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
-  z-index: 10;
 }
 
 .icon-box { 
   display: flex; 
   align-items: center; 
-  justify-content: center; 
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0; /* Impede o ícone de amassar */
 }
 
 .icon-img { 
-  width: 80px; 
-  height: 80px; /* Definido altura fixa para garantir que apareça bem ao lado do texto */
+  width: 100%;
+  height: 100%;
   object-fit: contain; 
 }
-
-.icon-placeholder { font-size: 50px; }
 
 .nome-curso {
   color: #800080;
@@ -194,6 +171,7 @@ onMounted(() => {
   text-transform: uppercase;
   margin: 0;
   letter-spacing: 0.5px;
+  text-align: left; /* Alinha o texto à esquerda */
 }
 
 @media (max-width: 768px) {
@@ -203,10 +181,8 @@ onMounted(() => {
   .card {
     min-height: 140px; 
     padding: 0 20px;
-    margin-top: 0; /* No mobile remove o margin negativo se desejar padrão */
-  }
-  .titulo-principal {
-    font-size: 2rem;
+    margin-top: 0;
+    justify-content: center; /* No mobile pode centralizar se preferir */
   }
 }
 </style>
