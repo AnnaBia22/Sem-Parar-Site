@@ -40,7 +40,6 @@ const fetchCursos = async () => {
     }
 
     if (!req.ok) throw new Error(`Erro API: ${req.status}`);
-    
     const res = await req.json();
     
     if (res.data && res.data.lista_cursos) {
@@ -53,9 +52,9 @@ const fetchCursos = async () => {
 
   } catch (error) {
     console.error("Erro:", error);
-    erro.value = "Falha na conexão com o Strapi.";
+    erro.value = "Erro ao carregar.";
   } finally {
-    loading.value = false;
+    setTimeout(() => { loading.value = false; }, 500);
   }
 };
 
@@ -76,8 +75,8 @@ onMounted(() => {
       
       <div v-else class="grid-cursos">
         <div v-for="curso in cursos" :key="curso.id" class="card-wrapper">
-          
           <a :href="curso.link_pag" class="card">
+            
             <div class="icon-box">
                <img 
                 v-if="getImagemUrl(curso)" 
@@ -87,9 +86,9 @@ onMounted(() => {
                 />
               <span v-else class="icon-placeholder">📚</span>
             </div>
+            
             <h2 class="nome-curso">{{ curso.nome_curso }}</h2>
           </a>
-
         </div>
       </div>
     </div>
@@ -158,6 +157,7 @@ onMounted(() => {
   justify-content: center; 
   gap: 30px; 
   text-decoration: none;
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
   box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
   position: relative;

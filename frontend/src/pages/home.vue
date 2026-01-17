@@ -2,29 +2,44 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import Footer from '../components/footer.vue';
 
-// --- VARIÁVEIS DO SISTEMA ---
+const STRAPI_URL = 'http://localhost:1337';
 const dadosHome = ref(null);
 const carregando = ref(true);
 const erro = ref(null);
-const STRAPI_URL = 'http://localhost:1337';
 
-// Controles de Navegação
 const indiceDepoimento = ref(0);
 const indiceBanner = ref(0);
 let bannerTimer = null; 
 
-// --- BUSCAR DADOS NO STRAPI ---
+const getImgUrl = (midia) => {
+  if (!midia) return '';
+  
+  let url = null;
+
+  if (midia.url) {
+    url = midia.url;
+  } else if (midia.data) {
+    if (Array.isArray(midia.data) && midia.data.length > 0) {
+      url = midia.data[0].attributes.url;
+    } else if (midia.data.attributes) {
+      url = midia.data.attributes.url;
+    }
+  } else if (Array.isArray(midia) && midia.length > 0) {
+    const item = midia[0];
+    if (item.url) url = item.url;
+    else if (item.attributes) url = item.attributes.url;
+  }
+
+  if (url) {
+    return url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
+  }
+  
+  return '';
+};
+
 const buscarDados = async () => {
   try {
-    // AJUSTE 1: Removi '&populate[lista_depoimentos][populate]=foto_aluna'
-    // Agora pedimos apenas os dados do componente, sem tentar buscar a foto deletada
-    const query = [
-      '?populate[menu_navegacao]=*',
-      '&populate[banner_destaques][populate]=imagem',
-      '&populate[cursos_abertos][populate]=icon',
-      '&populate[lista_depoimentos]=*', 
-      '&populate[Logo][fields]=url'
-    ].join('');
+    const query = '?populate[menu_navegacao]=*&populate[banner_destaques][populate]=imagem&populate[cursos_abertos][populate]=icon&populate[lista_depoimentos]=*&populate[Logo][fields]=url';
     
     const resposta = await fetch(`${STRAPI_URL}/api/home${query}`);
     
@@ -43,20 +58,6 @@ const buscarDados = async () => {
   }
 };
 
-// --- FUNÇÃO DE IMAGEM ---
-const getImgUrl = (midia) => {
-  if (!midia) return '';
-  if (midia.url) return `${STRAPI_URL}${midia.url}`;
-  if (midia.data && midia.data.attributes) return `${STRAPI_URL}${midia.data.attributes.url}`;
-  if (Array.isArray(midia) && midia.length > 0) {
-    const item = midia[0];
-    if (item.url) return `${STRAPI_URL}${item.url}`;
-    if (item.attributes) return `${STRAPI_URL}${item.attributes.url}`;
-  }
-  return '';
-};
-
-// --- LÓGICA DO CARROSSEL DE DEPOIMENTOS ---
 const proximoDepoimento = () => {
   if (!dadosHome.value?.lista_depoimentos) return;
   if (indiceDepoimento.value === dadosHome.value.lista_depoimentos.length - 1) {
@@ -75,7 +76,6 @@ const anteriorDepoimento = () => {
   }
 };
 
-// --- LÓGICA DO BANNER AUTOMÁTICO ---
 const proximoBanner = () => {
   if (!dadosHome.value?.banner_destaques) return;
   if (indiceBanner.value === dadosHome.value.banner_destaques.length - 1) {
@@ -89,7 +89,6 @@ const iniciarBannerAutomatico = () => {
   bannerTimer = setInterval(proximoBanner, 8000);
 };
 
-// --- CICLO DE VIDA ---
 onMounted(() => {
   buscarDados();
 });
@@ -146,7 +145,7 @@ onUnmounted(() => {
           
           <div class="cards-container">
             <div v-for="card in (dadosHome.cursos_abertos || [])" :key="card.id" class="card">
-              <img :src="getImgUrl(card.icon)" class="card-icon-img" style="width: 50px; height: 50px; object-fit: contain;">
+              <img :src="getImgUrl(card.icon)" class="card-icon-img">
               <div class="card-content">
                  <span class="card-title">{{ card.nome_curso }}</span>
                  <a :href="card.link_pag" class="btn-curso">SAIBA MAIS</a>
@@ -177,7 +176,7 @@ onUnmounted(() => {
                     <p class="aluna-nome">
                          {{ dadosHome.lista_depoimentos[indiceDepoimento].nome_aluna }}
                     </p>
-                    <small style="color: #666; margin-top:5px; display:block;">
+                    <small class="contador-depoimento">
                       {{ indiceDepoimento + 1 }} / {{ dadosHome.lista_depoimentos.length }}
                     </small>
                   </div>
@@ -203,7 +202,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* --- CONFIGURAÇÃO DA ANIMAÇÃO SUAVE --- */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 1.5s ease;
@@ -214,7 +212,6 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-/* --- GERAL --- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
 
 .loading-state { text-align: center; padding: 20px; font-weight: bold; color: #666; }
@@ -222,7 +219,6 @@ onUnmounted(() => {
 .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 .img-placeholder { background-color: #eee; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #aaa; }
 
-/* --- HEADER --- */
 header { padding: 20px 0; }
 .header-content { display: flex; flex-direction: column; align-items: center; }
 .logo { width: 400px; max-width: 100%; margin-bottom: 0px; object-fit: contain; }
@@ -230,22 +226,20 @@ header { padding: 20px 0; }
 .nav-item a { background-color: #25074f; color: #fffff5; text-decoration: none; width: 200px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 25px; font-weight: bold; text-transform: uppercase; font-size: 1rem; transition: background 0.3s; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); text-align: center; }
 .nav-item a:hover { background-color: #3e0c85; }
 
-/* --- HERO SECTION --- */
 .hero { padding: 20px 0; text-align: center; }
 .banner-container { min-height: 300px; display: flex; justify-content: center; align-items: center; }
 .banner-img { width: 100%; max-width: 1200px; object-fit: cover; margin-bottom: 30px; display: block; }
 .hero-text { color: #1b1814; font-size: 1rem; max-width: 800px; margin: 0 auto; line-height: 1.5; }
 
-/* --- INSCRIÇÕES --- */
 .inscricoes { background-color: #25074f; padding: 1px 0px 70px 0px; margin-top: 10px; width: 100%; }
 .text-orange { color: #ff9a16; margin-bottom: 30px; font-size: 3.5rem; text-align: center; }
 .cards-container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
 .card { background: #fffff5; border-radius: 15px; padding: 15px 40px; display: flex; align-items: center; gap: 15px; width: 200px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
 .card:hover { transform: translateY(-5px); }
+.card-icon-img { width: 50px; height: 50px; object-fit: contain; }
 .card-title { color: #890d8e; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; display: block; }
 .btn-curso { display: block; margin-top: 5px; font-size: 0.9rem; color: #ff9a16; text-decoration: none; font-weight: bold; }
 
-/* --- DEPOIMENTOS --- */
 .depoimentos { 
   padding: 60px 0; 
   position: relative; 
@@ -259,12 +253,11 @@ header { padding: 20px 0; }
 .arrow-btn:hover { background: #e68a00; transform: translateY(-2px); }
 .arrow-btn img { width: 15px; height: auto; }
 
-/* Wrapper Fixo */
 .wrapper-fixo {
   position: relative;
   width: 900px;
   max-width: 100%;
-  min-height: 250px; /* Reduzi um pouco a altura mínima pois sem foto ocupa menos verticalmente */
+  min-height: 250px; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -277,18 +270,17 @@ header { padding: 20px 0; }
   justify-content: center;
 }
 
-/* AJUSTE 2: TEXTO ALONGADO E CENTRALIZADO */
 .texto-wrapper {
-  max-width: 850px; /* Aumentei de 500px para 850px para alongar o texto */
+  max-width: 850px; 
   width: 100%;
-  text-align: center; /* Centralizei para ficar mais bonito sem a foto ao lado */
+  text-align: center; 
 }
 
 .testimonial-text {
   color: #1b1814;
   line-height: 1.6;
   font-size: 1.1rem;
-  text-align: center; /* Garante que o texto fique centralizado */
+  text-align: center; 
 }
 
 .aluna-nome {
@@ -298,10 +290,15 @@ header { padding: 20px 0; }
   text-transform: uppercase;
 }
 
+.contador-depoimento {
+  color: #666; 
+  margin-top: 5px; 
+  display: block;
+}
+
 .decorative-element { position: absolute; bottom: 0; left: 0; z-index: -1; }
 .deco-img { width: 150px; height: 150px; border-radius: 0 100% 0 0; }
 
-/* Responsividade Mobile */
 @media (max-width: 768px) {
   .depoimentos-header { padding-left: 0; text-align: center; }
   .content-wrapper { flex-direction: column; text-align: center; }
