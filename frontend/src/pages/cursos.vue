@@ -99,46 +99,116 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Layout Global */
+* {
+  box-sizing: border-box;
+}
+
 .main-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .page-container {
   flex: 1;
-  max-width: 1200px;
   width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 60px 20px;
-  text-align: center;
-  font-family: 'Arial', sans-serif; 
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
 }
 
-/* Tipografia */
 .titulo-principal {
   color: #ff9900;
   font-size: 3rem;
   font-weight: 800;
   text-transform: uppercase;
   margin-bottom: 10px;
-  margin-top: 0px;
+  margin-top: 0;
   letter-spacing: 1px;
+  text-align: center;
 }
 
 .subtitulo {
   color: #1b1814;
   margin-bottom: 70px;
   font-size: 1.1rem;
+  text-align: center;
+  max-width: 800px;
 }
 
-/* Loader */
+.grid-cursos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 550px));
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.card-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  background: #fffdfc;
+  border: 1px solid #e0e0e0;
+  border-radius: 30px;
+  min-height: 160px;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 25px;
+  text-decoration: none;
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 1px 1px 12px 2px rgba(138, 13, 142, 0.15);
+  border-color: #8a0d8e25;
+  z-index: 10;
+}
+
+.icon-box { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  flex-shrink: 0; 
+}
+
+.icon-img { 
+  width: 75px;
+  height: auto; 
+  object-fit: contain; 
+}
+
+.icon-placeholder { font-size: 50px; }
+
+.nome-curso {
+  color: #800080;
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
 .loader-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   margin: 50px 0;
 }
 
@@ -152,106 +222,41 @@ onMounted(() => {
   margin-bottom: 15px;
 }
 
-.loading-text {
-  color: #890d8e;
-  font-weight: bold;
-  font-size: 1.1rem;
-  margin: 0;
+.loading-text { 
+  color: #890d8e; 
+  font-weight: bold; 
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Tratamento de Erro */
 .aviso.erro {
-    color: red;
-    font-weight: bold;
-    background: #fff0f0;
-    padding: 20px;
-    border-radius: 10px;
-    display: inline-block;
+  color: red; 
+  background: #fff0f0; 
+  padding: 20px; 
+  border-radius: 10px;
 }
 
-/* Grid */
-.grid-cursos {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 50px;
-  row-gap: 50px;
-  width: 100%;
-  box-sizing: border-box;
+@keyframes spin { 
+  0% { transform: rotate(0deg); } 
+  100% { transform: rotate(360deg); } 
 }
 
-/* Card Wrapper */
-.card-wrapper {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-/* Card */
-.card {
-  width: 100%;
-  box-sizing: border-box;
-  background: #fffdfc;
-  border: 1px solid #e0e0e0;
-  border-radius: 30px;
-  min-height: 180px; 
-  padding: 0 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  text-decoration: none;
-  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  border-color: #8a0d8e25;
-  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
-  z-index: 10;
-}
-
-/* Elementos internos */
-.icon-box { 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-}
-
-.icon-img { 
-  width: 80px;
-  height: auto; 
-  object-fit: contain; 
-}
-
-.icon-placeholder { font-size: 50px; }
-
-.nome-curso {
-  color: #800080;
-  font-size: 1.8rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  margin: 0;
-  letter-spacing: 0.5px;
-}
-
-/* Responsividade */
 @media (max-width: 768px) {
+  .page-container {
+    padding: 40px 15px;
+  }
+  
+  .titulo-principal { 
+    font-size: 2rem; 
+  }
+  
   .grid-cursos {
     grid-template-columns: 1fr;
+    max-width: 450px;
   }
+  
   .card {
-    min-height: 140px;
-    padding: 0 20px;
-  }
-  .titulo-principal {
-    font-size: 2rem;
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 20px;
   }
 }
 </style>
