@@ -2,6 +2,11 @@ const parse = require('pg-connection-string').parse;
 const config = parse(process.env.DATABASE_URL);
 
 module.exports = ({ env }) => ({
+  'users-permissions': {
+    config: {
+      jwtSecret: env('JWT_SECRET'),
+    },
+  },
   connection: {
     client: 'postgres',
     connection: {
