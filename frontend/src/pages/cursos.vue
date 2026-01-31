@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import Header from '../components/header.vue'
 import Footer from '../components/footer.vue'; 
 
-const urlBase = 'http://localhost:1337';
+const urlBase = 'https://sem-parar-back.onrender.com';
 const apiEndpoint = '/api/pagina-curso?populate[lista_cursos][populate]=*'; 
 
 const cursos = ref([]);

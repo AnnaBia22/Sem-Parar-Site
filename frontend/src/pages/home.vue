@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import Footer from '../components/footer.vue';
 
-const STRAPI_URL = 'http://localhost:1337';
+const STRAPI_URL = 'https://sem-parar-back.onrender.com';
 const dadosHome = ref(null);
 const carregando = ref(true);
 const erro = ref(null);

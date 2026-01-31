@@ -34,7 +34,7 @@ import Header from '../components/header.vue'
 import Footer from '../components/footer.vue'
 import LoadingStatus from '../components/loading.vue'
 
-const baseUrl = "http://localhost:1337"
+const baseUrl = "https://sem-parar-back.onrender.com"
 const noticias = ref([])
 const loading = ref(true)
 

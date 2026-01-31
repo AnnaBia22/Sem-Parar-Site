@@ -62,7 +62,7 @@ import LoadingStatus from '../components/loading.vue'
 const route = useRoute()
 const loading = ref(true)
 const noticia = ref(null)
-const baseUrl = "http://localhost:1337"
+const baseUrl = "https://sem-parar-back.onrender.com"
 const urlAtual = computed(() => window.location.href)
 
 const compartilharGeral = async () => {

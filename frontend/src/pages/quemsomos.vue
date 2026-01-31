@@ -73,7 +73,7 @@ import Footer from '../components/footer.vue'
 import LoadingStatus from '../components/loading.vue'
 import axios from 'axios'
 
-const baseUrl = "http://localhost:1337"
+const baseUrl = "https://sem-parar-back.onrender.com"
 const voluntarias = ref([])
 const loading = ref(true)
 
