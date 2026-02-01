@@ -151,7 +151,7 @@ const todasSecoes = computed(() => {
         nome: attr.nome || "Sem nome",
         cargo: attr.cargo || "Voluntária",
         bio: bioTexto,
-        foto: imgUrl ? `${baseUrl}${imgUrl}` : "https://via.placeholder.com/240"
+        foto: imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) : "https://via.placeholder.com/240"
       }
     })
     return { id: cat, label: nomesCategorias[cat], membros }
