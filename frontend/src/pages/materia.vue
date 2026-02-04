@@ -94,6 +94,20 @@ const textoCoordenacao = computed(() => {
   return [desc]
 })
 
+const getInscricoes = computed(() => {
+  if (!materia.value) return [];
+  // Tenta pegar de todas as formas que o Strapi pode enviar
+  const lista = materia.value.attributes?.inscricoes || materia.value.inscricoes;
+  return Array.isArray(lista) ? lista : [];
+});
+
+// Faça o mesmo para os materiais, já deixando pronto:
+const getMateriais = computed(() => {
+  if (!materia.value) return [];
+  const lista = materia.value.attributes?.materiais || materia.value.materiais;
+  return Array.isArray(lista) ? lista : [];
+});
+
 onMounted(fetchData)
 watch(() => route.params.slug, fetchData)
 </script>
