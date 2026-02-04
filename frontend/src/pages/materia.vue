@@ -1,14 +1,13 @@
 <template>
   <Header />
-
   <LoadingStatus v-if="loading" />
 
   <template v-else>
     <main class="container" v-if="materia">
       <section class="intro">
-       <h1 class="titulo-principal">
-  {{ materia.attributes?.titulo || materia.titulo || "Título não encontrado" }}
-</h1>
+        <h1 class="titulo-principal">
+          {{ materia.attributes?.titulo || materia.titulo || "Título não encontrado" }}
+        </h1>
         <div class="descricao-box">
           <p v-for="(p, i) in textoCoordenacao" :key="i">{{ p }}</p>
         </div>
@@ -27,8 +26,9 @@
         <div class="conteudo-aba">
           <div v-if="abaAtiva === 'inscricoes'" class="fade-in">
             <h2 class="titulo-roxo">Cursos Disponíveis</h2>
-            <div v-if="materia.attributes?.inscricoes?.length > 0" class="lista-itens">
-              <div v-for="item in materia.attributes.inscricoes" :key="item.id" class="card-item">
+            
+            <div v-if="getInscricoes.length > 0" class="lista-itens">
+              <div v-for="item in getInscricoes" :key="item.id" class="card-item">
                 <div class="info">
                   <strong>{{ item.nome }}</strong>
                   <span>Prazo: {{ item.data_limite }}</span>
@@ -36,35 +36,15 @@
                 <a :href="item.link" target="_blank" class="btn-acao btn-verde">INSCREVER-SE</a>
               </div>
             </div>
+            
             <div v-else class="aviso-vazio">
               <p>No momento, não temos inscrições abertas para esta matéria.</p>
             </div>
           </div>
-
-          <div v-if="abaAtiva === 'materiais'" class="fade-in">
-            <h2 class="titulo-roxo">Materiais de Estudo</h2>
-            <div v-if="materia.attributes?.materiais?.length > 0" class="lista-itens">
-              <div v-for="material in materia.attributes.materiais" :key="material.id" class="card-item">
-                <div class="info">
-                  <strong>{{ material.semana }} - {{ material.titulo }}</strong>
-                </div>
-                <a :href="material.url_documento" class="btn-acao btn-roxo" target="_blank">DOWNLOAD</a>
-              </div>
-            </div>
-            <p v-else class="aviso-vazio">Os materiais serão publicados em breve.</p>
-          </div>
         </div>
       </section>
     </main>
-
-    <main class="container" v-else>
-      <div class="aviso-vazio">
-        <h2>Matéria "{{ $route.params.slug }}" não encontrada.</h2>
-        <p>Verifique se o slug no Strapi está correto.</p>
-      </div>
-    </main>
   </template>
-
   <Footer />
 </template>
 
