@@ -27,7 +27,7 @@
         <div class="conteudo-aba">
           <div v-if="abaAtiva === 'inscricoes'" class="fade-in">
             <h2 class="titulo-roxo">Cursos Disponíveis</h2>
-            <div v-if="materia.attributes?.inscricoes?.length > 0" class="lista-itens">
+            <div v-if="(materia.attributes?.inscricoes || materia.inscricoes)?.length > 0" class="lista-itens">
               <div v-for="item in materia.attributes.inscricoes" :key="item.id" class="card-item">
                 <div class="info">
                   <strong>{{ item.nome }}</strong>
