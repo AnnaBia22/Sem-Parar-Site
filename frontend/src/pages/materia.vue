@@ -84,10 +84,10 @@ const abaAtiva = ref('inscricoes')
 
 const fetchData = async () => {
   loading.value = true
-  materia.value = null // Reseta o estado antes da busca
+  materia.value = null
   try {
     const slugDaUrl = route.params.slug?.trim().toLowerCase()
-    const res = await axios.get(`${baseUrl}/api/materias?populate=*`)
+    const res = await axios.get(`${baseUrl}/api/materias?populate[inscricoes][populate]=*&populate[materiais][populate]=*`)
     
     if (res.data?.data) {
       const encontrada = res.data.data.find(m => {
