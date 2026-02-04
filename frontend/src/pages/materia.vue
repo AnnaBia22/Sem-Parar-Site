@@ -31,7 +31,7 @@
               <div v-for="item in getInscricoes" :key="item.id" class="card-item">
                 <div class="info">
                   <strong>{{ item.nome }}</strong>
-                  <span>Prazo: {{ item.data_limite }}</span>
+                  <span><br></br>Prazo: {{ item.data_limite }}</span>
                 </div>
                 <a :href="item.link" target="_blank" class="btn-acao btn-verde">INSCREVER-SE</a>
               </div>
