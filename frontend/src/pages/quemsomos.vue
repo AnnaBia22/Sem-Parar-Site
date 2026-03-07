@@ -1,24 +1,95 @@
+<script setup>
+import { computed } from 'vue'
+import Header from '../components/header.vue'
+import Footer from '../components/footer.vue'
+// 1. Importamos os dados direto do arquivo local
+import { VOLUNTARIAS } from '../constants/voluntarias.js'
+
+const dataIntro = {
+  titulo: "QUEM SOMOS",
+  descricao: [
+    "O Sem Parar nasceu em 2018 a partir do sonho de meninas do Ensino Médio que acreditavam na educação e na ciência como caminhos de transformação. Inicialmente voltado para a preparação de meninas para olimpíadas de Matemática, especialmente de escolas públicas do interior do Ceará e de Fortaleza, o projeto cresceu ao longo dos anos e, em 2020, migrou para o formato on-line, ampliando seu alcance para todo o Brasil.",
+
+    "Guiado pelo lema “meninas ensinando meninas”, o Sem Parar oferece cursos gratuitos preparatórios para olimpíadas científicas em diversas áreas do conhecimento. Por meio de aulas, materiais didáticos, listas de exercícios, simulados e uma grande comunidade colaborativa, buscamos fortalecer a representatividade feminina em um espaço historicamente masculino, promovendo pertencimento, acolhimento e excelência acadêmica.",
+
+    "Hoje, o projeto é formado por um time de mais de 30 voluntárias, todas meninas, atuando nas áreas de Astronomia, Biologia, Física, Informática, Matemática e Química. Desde 2020, já impactamos mais de 3000 alunas e conquistamos centenas de premiações, incluindo participações e medalhas em olimpíadas nacionais e internacionais. Em algumas edições de olimpíadas internacionais femininas, como a EGMO e a EGOI, equipes brasileiras foram compostas 100% por alunas e voluntárias do Sem Parar",
+
+    "Seguimos construindo pontes entre regiões, saberes e sonhos, estimulando o protagonismo feminino nas ciências e abrindo caminhos para novos futuros."
+  ]
+}
+
+const nomesCategorias = {
+  Administracao: "ADMINISTRAÇÃO",
+  Desenvolvedoras: "DESENVOLVEDORAS",
+  Informatica: "INFORMÁTICA",
+  Matematica: "MATEMÁTICA",
+  Fisica: "FÍSICA",
+  Biologia: "BIOLOGIA",
+  Quimica: "QUÍMICA",
+  Astronomia: "ASTRONOMIA",
+  Midia: "MÍDIA",
+  Legados: "LEGADOS"
+}
+
+// 2. A lógica agora filtra a constante local em vez da variável do Strapi
+const todasSecoes = computed(() => {
+  const categoriasOrdem = ['Administracao', 'Desenvolvedoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Midia', 'Legados']
+  
+  return categoriasOrdem.map(cat => {
+    const membros = VOLUNTARIAS.filter(v => v.categoria === cat)
+    return { id: cat, label: nomesCategorias[cat], membros }
+  }).filter(s => s.membros.length > 0)
+})
+
+const secoesEquipe = computed(() => todasSecoes.value.filter(s => s.id !== 'Legados'))
+const secaoLegados = computed(() => todasSecoes.value.find(s => s.id === 'Legados'))
+const temEquipe = computed(() => secoesEquipe.value.length > 0)
+</script>
+
 <template>
-  <Header />
+  <div class="main-wrapper">
+    <Header />
 
-  <LoadingStatus v-if="loading" />
+    <main class="container">
+      <section class="intro">
+        <h1 class="titulo-principal">{{ dataIntro.titulo }}</h1>
+        <div class="descricao-box">
+          <p v-for="(p, i) in dataIntro.descricao" :key="i">{{ p }}</p>
+        </div>
+      </section>
 
-  <main class="container" v-else>
-    <section v-if="dataIntro" class="intro">
-      <h1 class="titulo-principal">{{ dataIntro.titulo }}</h1>
-      <div class="descricao-box">
-        <p v-for="(p, i) in dataIntro.descricao" :key="i">{{ p }}</p>
-      </div>
-    </section>
-
-    <section v-if="temEquipe" class="secao-time">
-      <h2 class="titulo-laranja">NOSSO TIME</h2>
-      
-      <div v-for="secao in secoesEquipe" :key="secao.id" class="subsecao-materia">
-        <h3 class="titulo-roxo">{{ secao.label }}</h3>
+      <section v-if="temEquipe" class="secao-time">
+        <h2 class="titulo-laranja">NOSSO TIME</h2>
         
+        <div v-for="secao in secoesEquipe" :key="secao.id" class="subsecao-materia">
+          <h3 class="titulo-roxo">{{ secao.label }}</h3>
+          
+          <div class="grid-membros">
+            <div v-for="membro in secao.membros" :key="membro.id" class="polaroid-container">
+              <div class="card-flip">
+                <div class="card-front">
+                  <div class="foto-placeholder">
+                    <img :src="membro.foto" :alt="membro.nome">
+                  </div>
+                  <div class="info-membro">
+                    <span class="nome">{{ membro.nome }}</span>
+                    <span class="cargo">{{ membro.cargo }}</span>
+                  </div>
+                </div>
+                <div class="card-back">
+                  <h4 class="titulo-bio">Bio</h4>
+                  <p class="texto-bio">{{ membro.bio }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section v-if="secaoLegados" class="secao-time">
+        <h2 class="titulo-laranja">LEGADOS</h2>
         <div class="grid-membros">
-          <div v-for="membro in secao.membros" :key="membro.id" class="polaroid-container">
+          <div v-for="membro in secaoLegados.membros" :key="membro.id" class="polaroid-container">
             <div class="card-flip">
               <div class="card-front">
                 <div class="foto-placeholder">
@@ -36,132 +107,12 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <section v-if="secaoLegados" class="secao-time">
-      <h2 class="titulo-laranja">LEGADOS</h2>
-      <div class="grid-membros">
-        <div v-for="membro in secaoLegados.membros" :key="membro.id" class="polaroid-container">
-          <div class="card-flip">
-            <div class="card-front">
-              <div class="foto-placeholder">
-                <img :src="membro.foto" :alt="membro.nome">
-              </div>
-              <div class="info-membro">
-                <span class="nome">{{ membro.nome }}</span>
-                <span class="cargo">{{ membro.cargo }}</span>
-              </div>
-            </div>
-            <div class="card-back">
-              <h4 class="titulo-bio">Bio</h4>
-              <p class="texto-bio">{{ membro.bio }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <Footer />
+    <Footer />
+  </div>
 </template>
-
-<script setup>
-import { ref, onMounted, computed } from 'vue'
-import Header from '../components/header.vue'
-import Footer from '../components/footer.vue'
-import LoadingStatus from '../components/loading.vue'
-import axios from 'axios'
-
-const baseUrl = "https://sem-parar-back.onrender.com"
-const voluntarias = ref([])
-const loading = ref(true)
-
-const dataIntro = {
-
-  titulo: "QUEM SOMOS",
-
-  descricao: [
-
-    "O Sem Parar nasceu em 2018 a partir do sonho de meninas do Ensino Médio que acreditavam na educação e na ciência como caminhos de transformação. Inicialmente voltado para a preparação de meninas para olimpíadas de Matemática, especialmente de escolas públicas do interior do Ceará e de Fortaleza, o projeto cresceu ao longo dos anos e, em 2020, migrou para o formato on-line, ampliando seu alcance para todo o Brasil.",
-
-
-
-    "Guiado pelo lema “meninas ensinando meninas”, o Sem Parar oferece cursos gratuitos preparatórios para olimpíadas científicas em diversas áreas do conhecimento. Por meio de aulas, materiais didáticos, listas de exercícios, simulados e uma grande comunidade colaborativa, buscamos fortalecer a representatividade feminina em um espaço historicamente masculino, promovendo pertencimento, acolhimento e excelência acadêmica.",
-
-
-
-    "Hoje, o projeto é formado por um time de mais de 30 voluntárias, todas meninas, atuando nas áreas de Astronomia, Biologia, Física, Informática, Matemática e Química. Desde 2020, já impactamos mais de 3000 alunas e conquistamos centenas de premiações, incluindo participações e medalhas em olimpíadas nacionais e internacionais. Em algumas edições de olimpíadas internacionais femininas, como a EGMO e a EGOI, equipes brasileiras foram compostas 100% por alunas e voluntárias do Sem Parar.",
-
-
-
-    "Seguimos construindo pontes entre regiões, saberes e sonhos, estimulando o protagonismo feminino nas ciências e abrindo caminhos para novos futuros.",
-
-   
-
-    "Conheça as voluntárias que fazem tudo isso acontecer nas mais diversas áreas."
-
-  ]
-
-}
-
-
-
-const nomesCategorias = {
-  Administracao: "ADMINISTRAÇÃO",
-  Desenvolvedoras: "DESENVOLVEDORAS",
-  Informatica: "INFORMÁTICA",
-  Matematica: "MATEMÁTICA",
-  Fisica: "FÍSICA",
-  Biologia: "BIOLOGIA",
-  Quimica: "QUÍMICA",
-  Astronomia: "ASTRONOMIA",
-  Midia: "MÍDIA",
-  Legados: "LEGADOS"
-}
-
-onMounted(async () => {
-  try {
-    const res = await axios.get(`${baseUrl}/api/voluntarias?populate=*&pagination[pageSize]=100`)
-    voluntarias.value = Array.isArray(res.data.data) ? res.data.data : []
-  } catch (error) {
-    console.error("Erro ao buscar dados:", error)
-  } finally {
-    loading.value = false
-  }
-})
-
-const todasSecoes = computed(() => {
-  const categoriasOrdem = ['Administracao', 'Desenvolvedoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Midia', 'Legados']
-  
-  return categoriasOrdem.map(cat => {
-    const membros = voluntarias.value.filter(v => {
-      const c = v.attributes?.categoria || v.categoria
-      return c?.toLowerCase().trim() === cat.toLowerCase().trim()
-    }).map(m => {
-      const attr = m.attributes || m
-      let bioTexto = "Bio não informada."
-      if (attr.bio) {
-        if (typeof attr.bio === 'string') bioTexto = attr.bio
-        else if (Array.isArray(attr.bio)) bioTexto = attr.bio[0]?.children?.[0]?.text || bioTexto
-      }
-      const imgUrl = attr.imagem?.data?.attributes?.url || attr.imagem?.url
-      return {
-        id: m.id,
-        nome: attr.nome || "Sem nome",
-        cargo: attr.cargo || "Voluntária",
-        bio: bioTexto,
-        foto: imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) : "https://via.placeholder.com/240"
-      }
-    })
-    return { id: cat, label: nomesCategorias[cat], membros }
-  }).filter(s => s.membros.length > 0)
-})
-
-const secoesEquipe = computed(() => todasSecoes.value.filter(s => s.id !== 'Legados'))
-const secaoLegados = computed(() => todasSecoes.value.find(s => s.id === 'Legados'))
-const temEquipe = computed(() => secoesEquipe.value.length > 0)
-</script>
 
 <style scoped>
 .container {
