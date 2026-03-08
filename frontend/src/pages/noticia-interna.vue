@@ -172,7 +172,14 @@ onMounted(async () => {
 .icon-img { width: 28px; height: auto; }
 
 .imagem-destaque { margin: 0 0 30px 0; }
-.imagem-destaque img { width: 100%; max-height: 600px; object-fit: cover; border-radius: 10px; }
+.imagem-destaque img {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Trava a proporção */
+  object-fit: cover;    /* Preenche o espaço sem distorcer */
+  object-position: center; /* Garante que o corte seja no meio */
+  border-radius: 10px;
+  display: block;
+}
 
 .legenda-centralizada {
   text-align: center; font-size: 0.9rem; color: #666;
