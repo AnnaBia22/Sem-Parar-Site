@@ -125,7 +125,7 @@ onMounted(async () => {
               hour: '2-digit', minute: '2-digit',
             }).replace(',', ' às')
           : '',
-        foto: midiaCapa?.url ? baseUrl + midiaCapa.url : null,
+        foto: midiaCapa?.url ? (midiaCapa.url.startsWith('http') ? midiaCapa.url : baseUrl + midiaCapa.url) : null,
         legenda: data.descricao_capa,
         conteudoRaw: data.conteudo
       }
