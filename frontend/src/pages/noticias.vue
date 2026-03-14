@@ -48,6 +48,11 @@ onMounted(async () => {
         const midiaCapa = attr.capa?.data?.[0]?.attributes || attr.capa?.[0]
         const imgUrl = midiaCapa?.url
 
+        // LOGICA DE VACINA PARA A URL DA FOTO
+        const fotoFinal = imgUrl 
+          ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) 
+          : 'https://picsum.photos/400/225'; // Proporção 16:9 também no placeholder
+
         return {
           id: n.documentId || n.id,
           titulo: attr.tituloprincipal || "Sem título",
@@ -56,7 +61,7 @@ onMounted(async () => {
           dataFormato: attr.data_postagem 
             ? new Date(attr.data_postagem).toLocaleDateString('pt-BR') 
             : 'Sem data',
-          foto: imgUrl ? `${baseUrl}${imgUrl}` : 'https://picsum.photos/400/250'
+          foto: fotoFinal
         }
       })
     }
