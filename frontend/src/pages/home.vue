@@ -4,7 +4,7 @@ import axios from 'axios';
 import Footer from '../components/footer.vue';
 import LoadingStatus from '../components/loading.vue';
 
-const baseUrl = "https://sem-parar-back.onrender.com";
+const baseUrl = "https://sem-parar-site-production.up.railway.app";
 const dadosHome = ref(null);
 const loading = ref(true);
 const indiceBanner = ref(0);

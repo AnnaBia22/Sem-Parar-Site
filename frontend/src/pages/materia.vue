@@ -57,7 +57,7 @@ import Footer from '../components/footer.vue'
 import LoadingStatus from '../components/loading.vue'
 
 const route = useRoute()
-const baseUrl = "https://sem-parar-back.onrender.com"
+const baseUrl = "https://sem-parar-site-production.up.railway.app"
 const materia = ref(null)
 const loading = ref(true)
 const abaAtiva = ref('inscricoes')
