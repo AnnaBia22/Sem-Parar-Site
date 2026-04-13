@@ -303,7 +303,7 @@ export const VOLUNTARIAS = [
     nome: "Maria Luiza de Queiroz Marinho Silva",
     cargo: "Desenvolvedora",
     categoria: "Desenvolvedoras",
-    bio: "Venho de Recife. Vejo na programação e no desenvolvimento web um meio de criar soluções reais.",
+    bio: "Venho de Recife. Vejo na programação e no desenvolvimento web um meio de criar soluções reais. Tive a oportunidade de ser aluna do Sem Parar e é encantador poder contribuir para que esse projeto alcance cada vez mais meninas!",
     foto: "/time/maria-luiza.jpeg"
   }
 ];
