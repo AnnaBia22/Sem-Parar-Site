@@ -29,13 +29,13 @@
         </div>
       </a>
 
-      <a href="https://wa.me/5599999999999" target="_blank" class="item-contato">
+      <a href="https://www.linkedin.com/company/sem-parar-projeto/" target="_blank" class="item-contato">
         <div class="icon-wrapper">
-          <img src="../assets/images/whatsapp-color.png" alt="WhatsApp" class="icon-img">
+          <img src="../assets/images/linkedin.png" alt="LinkedIn" class="icon-img">
         </div>
         <div class="texto-contato">
-          <span class="label">NÚMERO</span>
-          <span class="valor">(99) 9999-9999</span>
+          <span class="label">LINKEDIN</span>
+          <span class="valor">Sem Parar Projeto</span>
         </div>
       </a>
     </div>
