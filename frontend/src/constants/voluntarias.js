@@ -74,6 +74,30 @@ export const VOLUNTARIAS = [
     bio: "Nasci em Fortaleza-CE. Pretendo ampliar o acesso a materiais de qualidade, incentivando e apoiando meninas que desejam participar das olimpíadas de química.",
     foto: "/time/sophia-maia.jpg"
   },
+  {
+    id: 38,
+    nome: "Moara Nascimento Menezes",
+    cargo: "Mentora",
+    categoria: "Quimica",
+    bio: "Me chamo Moara, tenho 16 anos, sou de Feira de Santana - BA e tô no último ano do EM. Vou participar pela primeira vez do Projeto na equipe de química, também sou voluntária do Movimento Meninas Olímpicas. Sou apaixonadíssima em química e desde que entrei no ensino médio tive o sonho de ser monitora e ensinar aos outros a visão que eu tenho de química.",
+    foto: "/time/moara-nascimento.jpeg"
+  },
+  {
+    id: 39,
+    nome: "Isadora de Jesus Ferreira",
+    cargo: "Mentora",
+    categoria: "Quimica",
+    bio: "Eu sou a Isadora e atualmente tenho 19 anos! Sou natural de Londrina-PR e completamente apaixonada pelas ciências exatas. Fiz meu ensino médio integrado ao curso técnico em Biotecnologia e tive oportunidades incríveis através da pesquisa científica! A partir das olimpíadas visitei diversos estados e cidades, participei de eventos maravilhosos e conheci equipes encantadoras como a Sem Parar! Atualmente estou me graduando em Química na Universidade Estadual de Londrina e tenho como objetivo inspirar outras meninas científicas para que possam viver experiências tão maravilhosas quanto eu! ✨",
+    foto: "/time/isadora-ferreira.webp"
+  },
+  {
+    id: 40,
+    nome: "Ana Letícia de Sousa Setúbal Monteiro",
+    cargo: "Mentora",
+    categoria: "Quimica",
+    bio: "A química me faz a cada dia enxergar o charme das mais pequenas partículas da vida, espero que possamos deslumbrar dessa ciência incrível juntas por meio das olimpíadas. :)",
+    foto: "/time/ana-leticia-monteiro.jpeg"
+  },
 
   // --- INFORMÁTICA ---
   {
@@ -158,6 +182,22 @@ export const VOLUNTARIAS = [
     bio: "Técnica em Química pelo IFCE e astrônoma amadora. Cientista cidadã pela NASA/MCTI/IASC e bailarina.",
     foto: "/time/yasmim-santos.jpeg"
   },
+  {
+    id: 41,
+    nome: "Maria Eduarda Costa Aoki",
+    cargo: "Mentora",
+    categoria: "Astronomia",
+    bio: "Oi, atualmente eu tô no 2 ano do EM, me formo em 2027, sou uma pessoa determinada, que gosta de astronomia e quer fazer uma faculdade voltada para STEM",
+    foto: "/time/maria-eduarda-aoki.jpg"
+  },
+  {
+    id: 42,
+    nome: "Sophia Schettino Saraiva",
+    cargo: "Mentora",
+    categoria: "Astronomia",
+    bio: "Oi, gente! Me chamo Sophia e tenho 16 anos. Nasci em Salvador, mas moro e estudo em Brasília há 8 anos. Ao longo do sexto ano, passei a me interessar pelo ramo da ciência e comecei a participar de olimpíadas científicas. Foi nesse processo que descobri a OBA e me apaixonei pela Astronomia. Desde então, meu desejo é que outros jovens possam vivenciar essa experiência transformadora com as olimpíadas do conhecimento e tenham a oportunidade de conhecer e se encantar pela área da Astronomia e da Astrofísica, assim como aconteceu comigo.",
+    foto: "/time/sophia-saraiva.jpg"
+  },
 
   // --- BIOLOGIA ---
   {
@@ -184,6 +224,14 @@ export const VOLUNTARIAS = [
     bio: "Moro em Recife. Fico feliz em poder compartilhar com outras meninas o que tive o privilégio de aprender no mundo das olimpíadas.",
     foto: "/time/julia-miranda.jpeg"
   },
+  {
+    id: 43,
+    nome: "Bárbara Almeida de Morais",
+    cargo: "Mentora",
+    categoria: "Biologia",
+    bio: "Me chamo Bárbara. Nasci em Ipatinga (MG), morei por dois anos em Montes Claros e hoje estou em Belo Horizonte, onde curso Engenharia Química na Universidade Federal de Minas Gerais (UFMG). Sempre gostei muito de ciência e de participar de olimpíadas científicas, o que também despertou em mim o gosto por ensinar. Hoje, gosto especialmente de ajudar outros estudantes a conquistarem sonhos que um dia também foram meus e que tive a alegria de alcançar. No Projeto Sem Parar, atuo na área de Biologia, dando aulões preparatórios para a Olimpíada Brasileira de Biologia (OBB) e incentivando mais meninas a se envolverem com a ciência.",
+    foto: "/time/barbara-almeida.jpeg"
+  },
 
   // --- FÍSICA ---
   {
@@ -209,6 +257,22 @@ export const VOLUNTARIAS = [
     categoria: "Fisica",
     bio: "Represento as mulheres em competições nacionais de física. Quero fazer história e servir de infraestrutura para várias outras meninas.",
     foto: "/time/maria-beatriz.png"
+  },
+  {
+    id: 44,
+    nome: "Mariana Inês Costenaro",
+    cargo: "Mentora",
+    categoria: "Fisica",
+    bio: "Mariana Inês Costenaro é estudante do IFRS e curiosa por natureza (literalmente). Gosta de fazer perguntas difíceis, cruzar ciência com filosofia e entender como as pessoas pensam, sentem e aprendem. Desde cedo, encontrou nas olimpíadas científicas um espaço para explorar matemática, ciências e outras áreas que muitas pessoas acham chatas. Integra, além do Sem Parar, o Movimento Meninas Olímpicas e o Tocando em Frente. Se interessa por psicologia e neurociência e acredita no conhecimento como algo crítico e transformador — que não serve só para responder provas, mas para olhar e fazer o mundo diferente. Já foi monitora de Física bolsista e desenvolveu um projeto de divulgação científica nos moldes Carl Sagan. É a junção de suas referências. No tempo livre, ama música e cultura pop, alternar entre jazz e rock (e não só na música, na vida mesmo), além de consumir obras com protagonismo LGBTQIAPN+ e fazer a sua própria vida interessante o bastante para depois contar para seus amigos e eles rirem juntos, mesmo que não seja tão engraçado.",
+    foto: "/time/mariana-costenaro.jpg"
+  },
+  {
+    id: 45,
+    nome: "Leticia Frota Barreto",
+    cargo: "Mentora",
+    categoria: "Fisica",
+    bio: "Participar de olimpíadas me permitiu viajar para lugares lindos e conhecer pessoas incríveis. Além de ampliar minha visão de mundo, essas experiências fortaleceram minha confiança e me ajudaram a descobrir áreas pelas quais sou apaixonada. Espero incentivar outras meninas a acreditarem em si mesmas e a se aventurarem nessa jornada.",
+    foto: "/time/leticia-frota.jpeg"
   },
 
   // --- MÍDIA ---
@@ -286,6 +350,38 @@ export const VOLUNTARIAS = [
     bio: "De Curitiba. Descobri as olimpíadas de matemática no 8º ano e me apaixonei pelo ambiente maravilhoso das competições femininas.",
     foto: "/time/heloisa-mysczak.png"
   },
+  {
+    id: 46,
+    nome: "Lilithy Torezani",
+    cargo: "Mentora",
+    categoria: "Matematica",
+    bio: "Minha trajetória com as olimpíadas de matemática, especialmente a Olimpíada Brasileira de Matemática das Escolas Públicas, transformou profundamente a minha vida. Foi ali que descobri não apenas o encanto dos números, mas também a confiança em mim mesma e a coragem de sonhar mais alto. Hoje, desejo inspirar outras meninas a reconhecerem a própria potência e a perceberem que a matemática pode ser, além de conhecimento, um caminho de possibilidades e florescimento. ✨💜",
+    foto: "/time/lilithy-torezani.jpg"
+  },
+  {
+    id: 47,
+    nome: "Maria Clara Andrade Mousse",
+    cargo: "Mentora",
+    categoria: "Matematica",
+    bio: "Sou de Manaus, tenho 16 anos. Sou apaixonada pela matemática desde que tenho 12 anos e comecei a fazer olimpíadas no nono ano. Entrei no sem parar em 2026 como professora depois de ser aluna em 2024 e 2025 e espero poder contribuir para o projeto e incentivar cada vez mais meninas nas olimpíadas científicas :)",
+    foto: "/time/maria-mousse.jpg"
+  },
+  {
+    id: 48,
+    nome: "Júlia de Oliveira Bernardo Passarini",
+    cargo: "Mentora",
+    categoria: "Matematica",
+    bio: "Me chamo Júlia Passarini, tenho 15 anos, sou de Juiz de Fora (MG) e atualmente moro em Fortaleza (CE). Fiz minha primeira olimpíada no 7⁰ ano e, desde então, fui medalhista de bronze na OBM e tive a oportunidade de participar da PAGMO 2025, na qual eu conquistei medalha de prata e 5⁰ lugar da competição. Sou muito grata às olimpíadas por todas as oportunidades, viagens, pessoas especiais que conheci e aprendizados. Elas transformaram minha vida acadêmica e pessoal.",
+    foto: "/time/julia-passarini.jpeg"
+  },
+  {
+    id: 49,
+    nome: "Giovanna Pereira Ramos",
+    cargo: "Mentora",
+    categoria: "Matematica",
+    bio: "Olá, me chamo Giovanna Ramos e sou voluntária no Projeto Sem Parar na área de matemática, onde ajudo com aulas e materiais para incentivar meninas em STEM. Em 2024, fui aluna do projeto e desde então minha vida mudou, fui apresentada a uma realidade que não imaginava integrar e no ano seguinte conquistei a medalha de prata na PAGMO — uma vitória que só foi possível graças ao estímulo do projeto. E agora, espero contribuir no aprendizado e acolhimento das alunas, a fim de que cada uma descubra seu potencial na área de exatas.",
+    foto: "/time/giovanna-ramos.jpeg"
+  },
 
   // --- DESENVOLVIMENTO ---
   {
@@ -309,7 +405,7 @@ export const VOLUNTARIAS = [
     nome: "Malu Araujo Azevedo",
     cargo: "Mentora",
     categoria: "Informatica",
-    bio: "Meu nome é Malu, sou de Campo Grande (MS) e estou no segundo ano do ensino médio integrado em Eletrotécnica. Gosto muito da área de STEM, principalmente de programar, estudar física e montar PCBs. Fora isso, também amo todas as formas de arte: toco violino, gosto de literatura e de pintar/desenhar. No geral, sou uma pessoa bem curiosa, gosto de aprender coisas novas :)",
+    bio: "Meu nome é Malu, sou de Campo Grande (MS) e estou no segundo ano do ensino médio integrado em Eletrotécnica. Gosto muito da área de STEM, principalmente de programar, estudar física e montar PCBs. Fora isso, também amo todas as formas de arte: toco violino, gosto de literatura e de pintar/desenhar. No geral, sou uma person bem curiosa, gosto de aprender coisas novas :)",
     foto: "/time/malu-azevedo.jpg"
   }
 ];
