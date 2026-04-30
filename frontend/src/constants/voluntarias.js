@@ -46,7 +46,7 @@ export const VOLUNTARIAS = [
     id: 6,
     nome: "Isis Matos Andrade",
     cargo: "Mentora",
-    categoria: "Quimica",
+    categoria: "Legados",
     bio: "A olimpíada me fez ver o mundo de uma maneira diferente, além de me dar amigas incríveis. Espero que vocês possam ter essa perspectiva também!",
     foto: "/time/isis-matos.webp"
   },
@@ -151,8 +151,6 @@ export const VOLUNTARIAS = [
     foto: "/time/isabela-xavier.jpeg"
   },
   {
-    id: 20,
-    nome: "Caroline Ayumi Okumura",
     id: 19,
     nome: "Yasmim Santos Silva",
     cargo: "Mentora",
@@ -226,7 +224,7 @@ export const VOLUNTARIAS = [
     id: 27,
     nome: "Flávia Brandão Alves",
     cargo: "Criadora de Conteúdo",
-    categoria: "Midia",
+    categoria: "Legados",
     bio: "Saiu do Mato Grosso para estudar escrita criativa. Dedica-se aos estudos e sempre encontra tempo para atividades acadêmicas.",
     foto: "/time/flavia-alves.jpeg"
   },
@@ -234,7 +232,7 @@ export const VOLUNTARIAS = [
     id: 28,
     nome: "Joana Ferreira Pinto",
     cargo: "Criadora de Conteúdo",
-    categoria: "Midia",
+    categoria: "Legados",
     bio: "Apaixonada por arte e matemática. Através da arte, hoje ajudo o projeto a alcançar mais meninas que sonham alto.",
     foto: "/time/joana-ferreira.jpeg"
   },
@@ -250,25 +248,25 @@ export const VOLUNTARIAS = [
   // --- MATEMÁTICA ---
   {
     id: 30,
-    nome: "Sofia Costa Lima Pinheiro",
-    cargo: "Coordenadora da Equipe",
-    categoria: "Matematica",
-    bio: "Comecei a estudar para as Olimpíadas no sexto ano. Acredito que cada experiência traz algum aprendizado.",
-    foto: "/time/sofia-pinheiro-mat.png"
-  },
-  {
-    id: 31,
     nome: "Amanda Seillier Navai",
-    cargo: "Mentora",
+    cargo: "Coordenadora da Equipe",
     categoria: "Matematica",
     bio: "Minhas áreas favoritas são combinatória e teoria dos números. Fico feliz de poder retribuir como voluntária do Sem Parar.",
     foto: "/time/amanda-navai.jpg"
   },
   {
+    id: 31,
+    nome: "Sofia Costa Lima Pinheiro",
+    cargo: "Mentora",
+    categoria: "Matematica",
+    bio: "Comecei a estudar para as Olimpíadas no sexto ano. Acredito que cada experiência traz algum aprendizado.",
+    foto: "/time/sofia-pinheiro.png"
+  },
+  {
     id: 32,
     nome: "Luiza Akemi Bidoia de Freitas",
     cargo: "Mentora",
-    categoria: "Matematica",
+    categoria: "Legados",
     bio: "Estudante de matemática na USP. Medalhista em competições como TM2, OBMEP e EGMO.",
     foto: "/time/luiza-bidoia.jpg"
   },
@@ -305,5 +303,13 @@ export const VOLUNTARIAS = [
     categoria: "Desenvolvedoras",
     bio: "Venho de Recife. Vejo na programação e no desenvolvimento web um meio de criar soluções reais. Tive a oportunidade de ser aluna do Sem Parar e é encantador poder contribuir para que esse projeto alcance cada vez mais meninas!",
     foto: "/time/maria-luiza.jpeg"
+  },
+  {
+    id: 37,
+    nome: "Malu Araujo Azevedo",
+    cargo: "Mentora",
+    categoria: "Informatica",
+    bio: "Meu nome é Malu, sou de Campo Grande (MS) e estou no segundo ano do ensino médio integrado em Eletrotécnica. Gosto muito da área de STEM, principalmente de programar, estudar física e montar PCBs. Fora isso, também amo todas as formas de arte: toco violino, gosto de literatura e de pintar/desenhar. No geral, sou uma pessoa bem curiosa, gosto de aprender coisas novas :)",
+    foto: "/time/malu-azevedo.jpg"
   }
 ];
