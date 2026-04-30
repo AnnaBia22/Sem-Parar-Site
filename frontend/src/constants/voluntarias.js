@@ -407,5 +407,53 @@ export const VOLUNTARIAS = [
     categoria: "Informatica",
     bio: "Meu nome é Malu, sou de Campo Grande (MS) e estou no segundo ano do ensino médio integrado em Eletrotécnica. Gosto muito da área de STEM, principalmente de programar, estudar física e montar PCBs. Fora isso, também amo todas as formas de arte: toco violino, gosto de literatura e de pintar/desenhar. No geral, sou uma person bem curiosa, gosto de aprender coisas novas :)",
     foto: "/time/malu-azevedo.jpg"
+  },
+  {
+    id: 50,
+    nome: "Laís Nuto Rossman",
+    cargo: "Coordenadora Geral (2019-2025)",
+    categoria: "Legados",
+    bio: "Minha trajetória começou nas olimpíadas de Matemática ainda no ensino fundamental, onde conquistei premiações na OBMEP e OBM e tive a oportunidade de representar o Brasil na EGMO 2021. Ao longo desse caminho, vivi as dificuldades de ser a única menina em sala de aula, o que me motivou a entrar no Projeto Sem Parar para incentivar outras meninas a participarem de olimpíadas científicas. Atuei como coordenadora geral de 2019 a 2025 e sou muito grata por todos os aprendizados e experiências que o projeto me proporcionou.",
+    foto: "/time/lais-nuto-rossman.jpeg"
+  },
+  {
+    id: 51,
+    nome: "Taís Silva Moreira",
+    cargo: "Líder da Equipe de Física (2022/2023)",
+    categoria: "Legados",
+    bio: "Fui aluna do projeto desde pandemia de 2020, fazendo amizade com as meninas da equipe de math, química e principalmente física, ganhei diversas medalhas de ouro e prata nas olimpiadas brasileiras e obtive bolsa no Colégio Ari de Sá, graças ao networking com as meninas. Lá participei de Seletivas de Olimpíadas Internacionais de química, astronomia e a de física: a que mais me dediquei. Na oportunidade virei líder da Equipe de física do Sem Parar em 2022/2023 muito grata em retribuir tanto apoio que recebi.",
+    foto: "/time/tais-moreira.jpeg"
+  },
+  {
+    id: 52,
+    nome: "Sofhia de Souza Gonçalves",
+    cargo: "Coodenadora Geral",
+    categoria: "Legados",
+    bio: "Sofhia é engenheira de software na Brex e formada em Ciências da Computação pela USP. Medalhista da OBI, Sofhia foi voluntária do Sem Parar durante toda a faculdade, começando primeiro como professora de informática, passando para coordenação da equipe e, por último, fazendo parte da equipe de administração do projeto. Foi por conta de uma iniciativa como o Sem Parar que ela teve seu primeiro contato com programação, e por isso acredita tanto no projeto e vê o quanto é importante o incentivo (principalmente para meninas) nas olimpíadas científicas e na área de STEM.",
+    foto: "/time/sofhia-de-souza.jpeg"
+  },
+  {
+    id: 53,
+    nome: "Pietra Gullo Salgado Chaves",
+    cargo: "Mentora",
+    categoria: "Legados",
+    bio: "Meu nome é Pietra Gullo, faço Ciência da Computação na USP. Comecei no projeto Sem Parar como aluna, onde desenvolvi interesse por programação competitiva, e depois atuei como professora na área de informática. Sou medalhista da OBI, da Maratona Feminina de Programação (MFP) e participei da EGOI. Sou muito grata ao projeto, as olimpíadas e a programação competitiva mudaram minha vida, e devo parte disso ao Sem Parar.",
+    foto: "/time/pietra-gullo.jpg"
+  },
+  {
+    id: 54,
+    nome: "Luiza Clara de Albuquerque Pacheco",
+    cargo: "Cofundadora",
+    categoria: "Legados",
+    bio: "Sou cientista da computação e coordenadora-geral do Lab de Inovação e Dados do Governo do Ceará. Em 2018, cofundei o Sem Parar junto à Ana B, com o sonho de melhorar a nossa representatividade nas olimpíadas de matemática. O que começou como aulas voluntárias presenciais, de meninas para meninas, tornou-se um movimento nacional em diversas áreas do conhecimento. Cocriar essa rede de apoio é gratificante e essencial para garantir que mais meninas e mulheres ocupem seus espaços de direito na ciência e tecnologia. #SemParar",
+    foto: "/time/luiza-clara-pacheco.jpeg"
+  },
+  {
+    id: 55,
+    nome: "Fernanda Ferro Morais",
+    cargo: "Mentora",
+    categoria: "Legados",
+    bio: "Fui voluntária do projeto entre 2020 e 2022, na equipe de Matemática. Estudo Engenharia Física na Unicamp e participo do programa de duplo-diploma com a Télécom Paris. Atualmente estou no mestrado “Quantique, Mathématiques, Informatique” (QMI) do Institut Polytechnique de Paris.",
+    foto: "/time/fernanda-ferro-morais.jpg"
   }
 ];
