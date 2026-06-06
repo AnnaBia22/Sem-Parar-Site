@@ -5,13 +5,15 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /opt/
-COPY package.json package-lock.json ./
+# AJUSTE AQUI: Aponta para a pasta do seu backend
+COPY backend/package.json backend/package-lock.json ./
 RUN npm global upgrade npx
 RUN npm ci --only=production
 ENV PATH /opt/node_modules/.bin:$PATH
 
 WORKDIR /opt/app
-COPY . .
+# AJUSTE AQUI: Copia o conteúdo da pasta backend
+COPY my-cms/ .
 RUN npm run build
 
 # Estágio de Execução
@@ -27,7 +29,6 @@ ENV PATH /opt/node_modules/.bin:$PATH
 WORKDIR /opt/app
 COPY --from=build /opt/app ./
 
-# O Hugging Face Spaces roda na porta 7860 por padrão
 EXPOSE 7860
 ENV PORT=7860
 
