@@ -12,7 +12,6 @@ RUN npm ci --only=production
 ENV PATH /opt/node_modules/.bin:$PATH
 
 WORKDIR /opt/app
-# AJUSTE AQUI: Copia o conteúdo da pasta backend
 COPY my-cms/ .
 RUN npm run build
 
