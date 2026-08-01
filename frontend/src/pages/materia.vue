@@ -41,6 +41,34 @@
               <p>No momento, não temos inscrições abertas para esta matéria.</p>
             </div>
           </div>
+
+          <div v-if="abaAtiva === 'materiais'" class="fade-in">
+            <h2 class="titulo-roxo">Materiais e Exercícios</h2>
+
+            <div v-if="getMateriais.length > 0" class="lista-itens lista-materiais">
+              <div v-for="item in getMateriais" :key="item.id" class="card-material">
+                <div class="info">
+                  <strong>{{ item.nome_aula }}</strong>
+                  <span v-if="item.nome_curso" class="nome-curso-material">{{ item.nome_curso }}</span>
+                </div>
+                <div class="links-material">
+                  <a v-if="item.link_gravacao" :href="item.link_gravacao" target="_blank" class="btn-acao btn-roxo">
+                    Gravação da aula
+                  </a>
+                  <a v-if="item.link_exercicios" :href="item.link_exercicios" target="_blank" class="btn-acao btn-verde">
+                    Lista de exercícios
+                  </a>
+                  <a v-if="item.link_material_teorico" :href="item.link_material_teorico" target="_blank" class="btn-acao btn-laranja">
+                    Material teórico
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div v-else class="aviso-vazio">
+              <p>No momento, não temos materiais disponíveis para esta matéria.</p>
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -57,7 +85,7 @@ import Footer from '../components/footer.vue'
 import LoadingStatus from '../components/loading.vue'
 
 const route = useRoute()
-const baseUrl = "https://sem-parar-site-production.up.railway.app"
+import { baseUrl } from '../constants/api.js'
 const materia = ref(null)
 const loading = ref(true)
 const abaAtiva = ref('inscricoes')
@@ -178,6 +206,22 @@ watch(() => route.params.slug, fetchData)
 
 .btn-verde { background-color: #28a745; }
 .btn-roxo { background-color: #890d8e; }
+.btn-laranja { background-color: #ff9a16; }
+
+/* Cards de Material */
+.card-material {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.card-material .info { display: flex; flex-direction: column; gap: 4px; }
+.nome-curso-material { font-size: 0.85rem; color: #890d8e; font-weight: bold; text-transform: uppercase; }
+.links-material { display: flex; gap: 10px; flex-wrap: wrap; }
 
 /* Estilo do Aviso Vazio */
 .aviso-vazio {

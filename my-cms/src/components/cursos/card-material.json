@@ -5,13 +5,19 @@
   },
   "options": {},
   "attributes": {
-    "semana": {
+    "nome_curso": {
       "type": "string"
     },
-    "ttitulo": {
+    "nome_aula": {
       "type": "string"
     },
-    "url_documento": {
+    "link_gravacao": {
+      "type": "string"
+    },
+    "link_exercicios": {
+      "type": "string"
+    },
+    "link_material_teorico": {
       "type": "string"
     }
   },

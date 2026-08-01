@@ -20,19 +20,17 @@
     "bio": {
       "type": "text"
     },
-    "imagem": {
+    "foto": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "images"
       ]
     },
     "categoria": {
       "type": "enumeration",
       "enum": [
+        "Fundadora",
         "Administracao",
         "Desenvolvedoras",
         "Matematica",

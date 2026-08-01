@@ -34,7 +34,7 @@ import Header from '../components/header.vue'
 import Footer from '../components/footer.vue'
 import LoadingStatus from '../components/loading.vue'
 
-const baseUrl = "https://sem-parar-site-production.up.railway.app"
+import { baseUrl } from '../constants/api.js'
 const noticias = ref([])
 const loading = ref(true)
 

@@ -1,9 +1,36 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
 import Header from '../components/header.vue'
 import Footer from '../components/footer.vue'
-// 1. Importamos os dados direto do arquivo local
-import { VOLUNTARIAS } from '../constants/voluntarias.js'
+import LoadingStatus from '../components/loading.vue'
+
+import { baseUrl } from '../constants/api.js'
+const VOLUNTARIAS = ref([])
+const loading = ref(true)
+
+const getFotoUrl = (foto) => {
+  if (!foto) return null
+  const url = Array.isArray(foto) ? foto[0]?.url : foto.url
+  if (!url) return null
+  return url.startsWith('http') ? url : `${baseUrl}${url}`
+}
+
+const fetchVoluntarias = async () => {
+  try {
+    const res = await axios.get(`${baseUrl}/api/voluntarias?pagination[pageSize]=200&populate[foto]=true`)
+    VOLUNTARIAS.value = (res.data?.data || []).map(v => ({
+      ...v,
+      foto: getFotoUrl(v.foto)
+    }))
+  } catch (error) {
+    console.error("Erro ao carregar voluntárias:", error)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchVoluntarias)
 
 const dataIntro = {
   titulo: "QUEM SOMOS",
@@ -31,12 +58,30 @@ const nomesCategorias = {
   Legados: "LEGADOS"
 }
 
-// 2. A lógica agora filtra a constante local em vez da variável do Strapi
+const ehCoordenadora = (cargo) => (cargo || '').toLowerCase().startsWith('coordenadora')
+
+const ordenarMembros = (membros) => [...membros].sort((a, b) => {
+  const aCoord = ehCoordenadora(a.cargo)
+  const bCoord = ehCoordenadora(b.cargo)
+  if (aCoord !== bCoord) return aCoord ? -1 : 1
+  return a.nome.localeCompare(b.nome, 'pt-BR')
+})
+
+const ordenarAlfabetico = (membros) => [...membros].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))
+
+const ehFundadora = (v) => v.categoria === 'Fundadora' || /fundador/i.test(v.cargo || '')
+
+const secaoFundadoras = computed(() => {
+  const membros = ordenarMembros(VOLUNTARIAS.value.filter(ehFundadora))
+  return membros.length > 0 ? { id: 'Fundadoras', label: 'FUNDADORAS', membros } : null
+})
+
 const todasSecoes = computed(() => {
   const categoriasOrdem = ['Administracao', 'Desenvolvedoras', 'Informatica', 'Matematica', 'Fisica', 'Biologia', 'Quimica', 'Astronomia', 'Midia', 'Legados']
-  
+
   return categoriasOrdem.map(cat => {
-    const membros = VOLUNTARIAS.filter(v => v.categoria === cat)
+    const filtrados = VOLUNTARIAS.value.filter(v => v.categoria === cat && !ehFundadora(v))
+    const membros = cat === 'Legados' ? ordenarAlfabetico(filtrados) : ordenarMembros(filtrados)
     return { id: cat, label: nomesCategorias[cat], membros }
   }).filter(s => s.membros.length > 0)
 })
@@ -44,17 +89,69 @@ const todasSecoes = computed(() => {
 const secoesEquipe = computed(() => todasSecoes.value.filter(s => s.id !== 'Legados'))
 const secaoLegados = computed(() => todasSecoes.value.find(s => s.id === 'Legados'))
 const temEquipe = computed(() => secoesEquipe.value.length > 0)
+
+const CORES_AVATAR = ['#890d8e', '#ff9a16', '#25074f', '#c2185b', '#0288d1', '#2e7d32']
+
+const iniciais = (nome) => {
+  const partes = (nome || '').trim().split(/\s+/)
+  const primeira = partes[0]?.[0] || ''
+  const ultima = partes.length > 1 ? partes[partes.length - 1][0] : ''
+  return (primeira + ultima).toUpperCase()
+}
+
+const corAvatar = (nome) => {
+  let hash = 0
+  for (const char of nome || '') hash = char.charCodeAt(0) + ((hash << 5) - hash)
+  return CORES_AVATAR[Math.abs(hash) % CORES_AVATAR.length]
+}
+
+const cardsVirados = ref(new Set())
+const alternarCard = (id) => {
+  const novoSet = new Set(cardsVirados.value)
+  if (novoSet.has(id)) {
+    novoSet.delete(id)
+  } else {
+    novoSet.add(id)
+  }
+  cardsVirados.value = novoSet
+}
 </script>
 
 <template>
   <div class="main-wrapper">
     <Header />
 
-    <main class="container">
+    <LoadingStatus v-if="loading" />
+
+    <main v-else class="container">
       <section class="intro">
         <h1 class="titulo-principal">{{ dataIntro.titulo }}</h1>
         <div class="descricao-box">
           <p v-for="(p, i) in dataIntro.descricao" :key="i">{{ p }}</p>
+        </div>
+      </section>
+
+      <section v-if="secaoFundadoras" class="secao-time">
+        <h2 class="titulo-laranja">FUNDADORAS</h2>
+        <div class="grid-membros">
+          <div v-for="membro in secaoFundadoras.membros" :key="membro.id" class="polaroid-container" @click="alternarCard(membro.id)">
+            <div class="card-flip" :class="{ virado: cardsVirados.has(membro.id) }">
+              <div class="card-front">
+                <div class="foto-placeholder">
+                  <img v-if="membro.foto" :src="membro.foto" :alt="membro.nome">
+                  <div v-else class="avatar-iniciais" :style="{ background: corAvatar(membro.nome) }">{{ iniciais(membro.nome) }}</div>
+                </div>
+                <div class="info-membro">
+                  <span class="nome">{{ membro.nome }}</span>
+                  <span class="cargo">{{ membro.cargo }}</span>
+                </div>
+              </div>
+              <div class="card-back">
+                <h4 class="titulo-bio">Bio</h4>
+                <p class="texto-bio">{{ membro.bio }}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -65,11 +162,12 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
           <h3 class="titulo-roxo">{{ secao.label }}</h3>
           
           <div class="grid-membros">
-            <div v-for="membro in secao.membros" :key="membro.id" class="polaroid-container">
-              <div class="card-flip">
+            <div v-for="membro in secao.membros" :key="membro.id" class="polaroid-container" @click="alternarCard(membro.id)">
+              <div class="card-flip" :class="{ virado: cardsVirados.has(membro.id) }">
                 <div class="card-front">
                   <div class="foto-placeholder">
-                    <img :src="membro.foto" :alt="membro.nome">
+                    <img v-if="membro.foto" :src="membro.foto" :alt="membro.nome">
+                  <div v-else class="avatar-iniciais" :style="{ background: corAvatar(membro.nome) }">{{ iniciais(membro.nome) }}</div>
                   </div>
                   <div class="info-membro">
                     <span class="nome">{{ membro.nome }}</span>
@@ -89,11 +187,12 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
       <section v-if="secaoLegados" class="secao-time">
         <h2 class="titulo-laranja">LEGADOS</h2>
         <div class="grid-membros">
-          <div v-for="membro in secaoLegados.membros" :key="membro.id" class="polaroid-container">
-            <div class="card-flip">
+          <div v-for="membro in secaoLegados.membros" :key="membro.id" class="polaroid-container" @click="alternarCard(membro.id)">
+            <div class="card-flip" :class="{ virado: cardsVirados.has(membro.id) }">
               <div class="card-front">
                 <div class="foto-placeholder">
-                  <img :src="membro.foto" :alt="membro.nome">
+                  <img v-if="membro.foto" :src="membro.foto" :alt="membro.nome">
+                  <div v-else class="avatar-iniciais" :style="{ background: corAvatar(membro.nome) }">{{ iniciais(membro.nome) }}</div>
                 </div>
                 <div class="info-membro">
                   <span class="nome">{{ membro.nome }}</span>
@@ -192,7 +291,8 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
   transform-style: preserve-3d;
 }
 
-.polaroid-container:hover .card-flip { transform: rotateY(180deg); }
+.polaroid-container:hover .card-flip,
+.card-flip.virado { transform: rotateY(180deg); }
 
 .card-front, .card-back {
   position: absolute;
@@ -218,6 +318,18 @@ const temEquipe = computed(() => secoesEquipe.value.length > 0)
 }
 
 .foto-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+
+.avatar-iniciais {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: 'Sugo Display', sans-serif;
+  font-size: 2.6rem;
+  letter-spacing: 0.05em;
+}
 
 .info-membro { text-align: center; }
 .nome { font-family: 'Sugo Display', sans-serif; color: #25074f; font-weight: bold; display: block; font-size: 1.1rem; }

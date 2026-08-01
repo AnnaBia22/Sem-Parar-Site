@@ -62,7 +62,7 @@ import LoadingStatus from '../components/loading.vue'
 const route = useRoute()
 const loading = ref(true)
 const noticia = ref(null)
-const baseUrl = "https://sem-parar-site-production.up.railway.app"
+import { baseUrl } from '../constants/api.js'
 const urlAtual = computed(() => window.location.href)
 
 const compartilharGeral = async () => {
@@ -171,7 +171,7 @@ onMounted(async () => {
 
 .icon-img { width: 28px; height: auto; }
 
-.imagem-destaque { margin: 0 0 30px 0; }
+.imagem-destaque { max-width: 900px; margin: 0 auto 30px auto; }
 .imagem-destaque img {
   width: 100%;
   aspect-ratio: 16 / 9; /* Trava a proporção */

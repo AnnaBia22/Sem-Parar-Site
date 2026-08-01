@@ -2,9 +2,10 @@
   <footer class="footer-container">
     <div class="footer-section left">
       <p>
-        Layout por 
-        <a href="https://github.com/AnnaBia22" target="_blank">Anna Travascio</a> e 
-        <a href="https://github.com/maluqueirozz" target="_blank">Malu Queiroz</a>
+        Layout por
+        <a href="https://github.com/AnnaBia22" target="_blank">Anna Travascio</a>,
+        <a href="https://github.com/maluqueirozz" target="_blank">Malu Queiroz</a> e
+        <a href="https://github.com/gabistroeh" target="_blank">Gabriela Stroeh</a>
       </p>
     </div>
 
@@ -33,12 +34,12 @@ const currentYear = new Date().getFullYear();
   display: grid;
   grid-template-columns: 1fr auto 1fr; /* Divide em 3 colunas */
   align-items: flex-end; /* Alinha os textos na base */
-  padding: 10px 40px;
-  background-color: #EBEBEB; /* Cor cinza do fundo da imagem */
-  color: #1B1814;
+  padding: 28px 40px 16px;
+  background-color: #25074f;
+  color: #f1e9fa;
   font-family: sans-serif;
   font-size: 13px;
-  min-height: 60px;
+  min-height: 100px;
 }
 
 .footer-section {
@@ -50,7 +51,7 @@ const currentYear = new Date().getFullYear();
 .left {
   text-align: left;
   font-size: 10px;
-  color: #9c9c9cff; /* Texto mais claro conforme a imagem */
+  color: #b9a4d1;
 }
 
 .center {
@@ -69,7 +70,7 @@ const currentYear = new Date().getFullYear();
   flex-direction: column;
   gap: 4px;
   font-size: 16px;
-  color: #000;
+  color: #fff;
 }
 
 a {
