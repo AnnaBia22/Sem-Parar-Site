@@ -6,7 +6,6 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /opt/
 COPY my-cms/package.json my-cms/package-lock.json ./
-RUN npm install -g npx
 RUN npm ci --only=production
 ENV PATH /opt/node_modules/.bin:$PATH
 
