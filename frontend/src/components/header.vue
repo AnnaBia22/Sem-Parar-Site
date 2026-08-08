@@ -3,7 +3,7 @@
     <div class="logo-container">
   <router-link to="/">
     <img 
-      src="../assets/images/logo.png" 
+      src="../assets/images/logo-navbar.png"
       alt="Sem Parar" 
       class="logo" 
     />
@@ -31,15 +31,18 @@
   justify-content: space-between;
   align-items: center;
   padding: 5px 30px;
-  background-color: #EBEBEB;
-  border-bottom: 2px solid #ddd;
+  background-color: #25074f;
+  border-bottom: 2px solid #1a0538;
   font-family: Sugo Display, sans-serif;
   height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 /* Logo */
 .logo {
-  height: 70px; /* Ajuste conforme o tamanho original */
+  height: 42px;
 }
 
 /* Links de Navegação */
@@ -50,9 +53,9 @@
 
 .nav-item {
   text-decoration: none;
-  color: #890d8e;
+  color: #fff;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 18px;
   position: relative;
   padding-bottom: 5px;
 }
@@ -70,5 +73,23 @@
 
 .nav-item:hover {
   color: #ff9a16;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    height: auto;
+    padding: 10px 16px;
+    row-gap: 8px;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 16px;
+  }
+  .nav-item {
+    font-size: 14px;
+  }
 }
 </style>

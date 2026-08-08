@@ -5,9 +5,7 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /opt/
-# AJUSTE AQUI: Aponta para a pasta do seu backend
-COPY backend/package.json backend/package-lock.json ./
-RUN npm global upgrade npx
+COPY my-cms/package.json my-cms/package-lock.json ./
 RUN npm ci --only=production
 ENV PATH /opt/node_modules/.bin:$PATH
 
