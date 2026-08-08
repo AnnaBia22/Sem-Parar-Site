@@ -117,39 +117,55 @@ const mentoresEstaticos = [
     nome: "Yasmim Santos Silva",
     cargo: "Mentora de Astronomia",
     bio: "Técnica em Química pelo IFCE e astrônoma amadora. Cientista cidadã pela NASA/MCTI/IASC e bailarina.",
-    foto: `${baseUrl}/uploads/yasmim_santos_5478c2eb84.jpeg`
+    foto: null
   },
   {
     nome: "Heloísa Guedes de Azevedo Oliveira Mysczak",
     cargo: "Mentora de Matemática",
     bio: "De Curitiba. Descobri as olimpíadas de matemática no 8º ano e me apaixonei pelo ambiente maravilhoso das competições femininas.",
-    foto: `${baseUrl}/uploads/heloisa_mysczak_2acc825451.png`
+    foto: null
   },
   {
     nome: "Malu Araujo Azevedo",
     cargo: "Mentora de Informática",
     bio: "Meu nome é Malu, sou de Campo Grande (MS) e estou no segundo ano do ensino médio integrado em Eletrotécnica. Gosto muito da área de STEM, principalmente de programar, estudar física e montar PCBs.",
-    foto: `${baseUrl}/uploads/malu_azevedo_1ed56bdaf0.jpg`
+    foto: null
   },
   {
     nome: "Aini do Rio Apa Vincenzi",
     cargo: "Mentora de Física",
     bio: "Apaixonada por astrofísica e educação. Acredito que podemos usar a ciência para inspirar jovens a terem sonhos e lutarem por eles.",
-    foto: `${baseUrl}/uploads/aini_rio_apa_a353009ebf.jpg`
+    foto: null
   },
   {
     nome: "Julia Rampelotto Cardoso",
     cargo: "Mentora de Biologia",
     bio: "Une paixão por saúde pública e educação a um compromisso genuíno com o impacto social, atuando como professora voluntária e liderando a comissão acadêmica da Olimpíada Feminina de Biologia.",
-    foto: `${baseUrl}/uploads/Whats_App_Image_2026_05_25_at_17_59_30_Julia_Rampelotto_Cardoso_d5fd8be04f.jpeg`
+    foto: null
   },
   {
     nome: "Ana Júlia Fernandes Mota da Silva",
     cargo: "Coordenadora de Química",
     bio: "Oi, meninas! Sou Ana Júlia e durante meu ensino médio estudei para olimpíadas de química e amo ensinar e compartilhar essa matéria tão rica e interessante!",
-    foto: `${baseUrl}/uploads/ana_julia_mota_c730b8d78c.jpeg`
+    foto: null
   }
 ];
+
+const fetchFotosMentoras = async () => {
+  try {
+    const nomes = mentoresEstaticos.map(m => m.nome);
+    const query = nomes.map((nome, i) => `filters[$or][${i}][nome][$eq]=${encodeURIComponent(nome)}`).join('&');
+    const res = await axios.get(`${baseUrl}/api/voluntarias?${query}&populate[foto]=true`);
+    const encontradas = res.data?.data || [];
+    for (const mentor of mentoresEstaticos) {
+      const match = encontradas.find(v => v.nome === mentor.nome);
+      const url = match?.foto?.url;
+      if (url) mentor.foto = url.startsWith('http') ? url : `${baseUrl}${url}`;
+    }
+  } catch (error) {
+    console.error("Erro ao carregar fotos das mentoras:", error);
+  }
+};
 
 const indiceMentor = ref(0);
 const direcaoMentor = ref('next');
@@ -169,7 +185,7 @@ const onMentorEnter = makeSlideEnter(direcaoMentor);
 
 onMounted(async () => {
   loading.value = true;
-  await Promise.all([fetchData(), fetchCursos(), fetchTotalVoluntarias()]);
+  await Promise.all([fetchData(), fetchCursos(), fetchTotalVoluntarias(), fetchFotosMentoras()]);
   loading.value = false;
 });
 </script>
