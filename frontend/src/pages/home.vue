@@ -9,6 +9,7 @@ import { baseUrl } from '../constants/api.js'
 const dadosHome = ref(null);
 const cursos = ref([]);
 const loading = ref(true);
+const totalVoluntarias = ref(40);
 
 const fetchData = async () => {
   try {
@@ -26,6 +27,17 @@ const fetchCursos = async () => {
     cursos.value = res.data?.data?.lista_cursos || [];
   } catch (error) {
     console.error("Erro ao carregar cursos:", error);
+  }
+};
+
+const fetchTotalVoluntarias = async () => {
+  try {
+    const query = "?pagination[pageSize]=1&filters[categoria][$ne]=Legados";
+    const res = await axios.get(`${baseUrl}/api/voluntarias${query}`);
+    const total = res.data?.meta?.pagination?.total;
+    if (typeof total === "number") totalVoluntarias.value = total;
+  } catch (error) {
+    console.error("Erro ao carregar total de voluntárias:", error);
   }
 };
 
@@ -157,7 +169,7 @@ const onMentorEnter = makeSlideEnter(direcaoMentor);
 
 onMounted(async () => {
   loading.value = true;
-  await Promise.all([fetchData(), fetchCursos()]);
+  await Promise.all([fetchData(), fetchCursos(), fetchTotalVoluntarias()]);
   loading.value = false;
 });
 </script>
@@ -192,7 +204,7 @@ onMounted(async () => {
             <span class="stat-label">ano de fundação</span>
           </div>
           <div class="stat">
-            <span class="stat-number">+40</span>
+            <span class="stat-number">+{{ totalVoluntarias }}</span>
             <span class="stat-label">voluntárias</span>
           </div>
           <div class="stat">

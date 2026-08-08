@@ -126,7 +126,10 @@ const getInscricoes = computed(() => {
   if (!materia.value) return [];
   // Tenta pegar de todas as formas que o Strapi pode enviar
   const lista = materia.value.attributes?.inscricoes || materia.value.inscricoes;
-  return Array.isArray(lista) ? lista : [];
+  const todas = Array.isArray(lista) ? lista : [];
+  const hoje = new Date().toISOString().slice(0, 10);
+  // Esconde automaticamente inscrições cuja data limite já passou
+  return todas.filter(item => !item.data_limite || item.data_limite >= hoje);
 });
 
 // Faça o mesmo para os materiais, já deixando pronto:
