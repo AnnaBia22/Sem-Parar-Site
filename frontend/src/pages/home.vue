@@ -220,7 +220,7 @@ onMounted(async () => {
             <span class="stat-label">ano de fundação</span>
           </div>
           <div class="stat">
-            <span class="stat-number">+{{ totalVoluntarias }}</span>
+            <span class="stat-number">{{ totalVoluntarias }}</span>
             <span class="stat-label">voluntárias</span>
           </div>
           <div class="stat">
