@@ -60,8 +60,12 @@ const bannersDestaque = computed(() => {
   const lista = dadosHome.value?.banner_destaques;
   if (!Array.isArray(lista)) return [];
   return lista
-    .filter(banner => banner.texto)
-    .map(banner => ({ texto: banner.texto, link: banner.link || null }));
+    .map(banner => ({
+      imagemUrl: getIconUrl(banner.imagem),
+      texto: banner.texto || null,
+      link: banner.link || null,
+    }))
+    .filter(banner => banner.imagemUrl || banner.texto);
 });
 
 const depoimentosEstaticos = [
@@ -204,10 +208,16 @@ onMounted(async () => {
 
     <!-- BANNER DE DESTAQUE -->
     <section v-if="bannersDestaque.length" class="banner-destaque-section">
-      <div v-for="(banner, i) in bannersDestaque" :key="i" class="banner-destaque-faixa">
-        <span class="banner-destaque-texto">{{ banner.texto }}</span>
-        <a v-if="banner.link" :href="banner.link" target="_blank" class="banner-destaque-link">Saiba mais →</a>
-      </div>
+      <template v-for="(banner, i) in bannersDestaque" :key="i">
+        <a v-if="banner.imagemUrl && banner.link" :href="banner.link" target="_blank">
+          <img :src="banner.imagemUrl" alt="Banner de destaque" class="banner-destaque-img" />
+        </a>
+        <img v-else-if="banner.imagemUrl" :src="banner.imagemUrl" alt="Banner de destaque" class="banner-destaque-img" />
+        <div v-else class="banner-destaque-faixa">
+          <span class="banner-destaque-texto">{{ banner.texto }}</span>
+          <a v-if="banner.link" :href="banner.link" target="_blank" class="banner-destaque-link">Saiba mais →</a>
+        </div>
+      </template>
     </section>
 
     <!-- HERO -->
@@ -417,6 +427,7 @@ onMounted(async () => {
 
 /* BANNER DE DESTAQUE */
 .banner-destaque-section { width: 100%; }
+.banner-destaque-img { width: 100%; height: auto; display: block; max-height: 150px; object-fit: cover; }
 .banner-destaque-faixa {
   background: #ff9a16;
   padding: 10px 20px;
