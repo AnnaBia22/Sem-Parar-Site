@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import Header from '../components/header.vue';
 import Footer from '../components/footer.vue';
@@ -55,6 +55,14 @@ const getIconUrl = (icone) => {
   if (!url) return null;
   return url.startsWith('http') ? url : `${baseUrl}${url}`;
 };
+
+const bannersDestaque = computed(() => {
+  const lista = dadosHome.value?.banner_destaques;
+  if (!Array.isArray(lista)) return [];
+  return lista
+    .map(banner => getIconUrl(banner.imagem))
+    .filter(Boolean);
+});
 
 const depoimentosEstaticos = [
   {
@@ -211,6 +219,17 @@ onMounted(async () => {
     <LoadingStatus v-if="loading" />
 
     <main v-else class="content">
+
+      <!-- BANNER DE DESTAQUE -->
+      <section v-if="bannersDestaque.length" class="banner-destaque-section">
+        <img
+          v-for="(banner, i) in bannersDestaque"
+          :key="i"
+          :src="banner"
+          alt="Banner de destaque"
+          class="banner-destaque-img"
+        />
+      </section>
 
       <!-- STATS -->
       <section class="stats-band">
@@ -398,6 +417,10 @@ onMounted(async () => {
   .intro-title { font-size: 2.2rem; }
   .intro-logo { top: -127px; right: -127px; width: 360px; max-width: 65vw; opacity: 0.3; }
 }
+
+/* BANNER DE DESTAQUE */
+.banner-destaque-section { width: 100%; }
+.banner-destaque-img { width: 100%; height: auto; display: block; }
 
 /* STATS */
 .stats-band { background: #fff; padding: 44px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
