@@ -427,7 +427,7 @@ onMounted(async () => {
 
 /* BANNER DE DESTAQUE */
 .banner-destaque-section { width: 100%; }
-.banner-destaque-img { width: 100%; height: auto; display: block; max-height: 150px; object-fit: cover; }
+.banner-destaque-img { width: 100%; height: auto; display: block; max-height: 300px; object-fit: cover; }
 .banner-destaque-faixa {
   background: #ff9a16;
   padding: 10px 20px;
