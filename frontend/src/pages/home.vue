@@ -202,6 +202,17 @@ onMounted(async () => {
   <div class="page-wrapper">
     <Header />
 
+    <!-- BANNER DE DESTAQUE -->
+    <section v-if="bannersDestaque.length" class="banner-destaque-section">
+      <img
+        v-for="(banner, i) in bannersDestaque"
+        :key="i"
+        :src="banner"
+        alt="Banner de destaque"
+        class="banner-destaque-img"
+      />
+    </section>
+
     <!-- HERO -->
     <section class="intro-section">
       <img src="../assets/images/icone-simbolo.png" alt="" aria-hidden="true" class="intro-logo" />
@@ -219,17 +230,6 @@ onMounted(async () => {
     <LoadingStatus v-if="loading" />
 
     <main v-else class="content">
-
-      <!-- BANNER DE DESTAQUE -->
-      <section v-if="bannersDestaque.length" class="banner-destaque-section">
-        <img
-          v-for="(banner, i) in bannersDestaque"
-          :key="i"
-          :src="banner"
-          alt="Banner de destaque"
-          class="banner-destaque-img"
-        />
-      </section>
 
       <!-- STATS -->
       <section class="stats-band">
