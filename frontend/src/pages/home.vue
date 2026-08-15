@@ -60,8 +60,8 @@ const bannersDestaque = computed(() => {
   const lista = dadosHome.value?.banner_destaques;
   if (!Array.isArray(lista)) return [];
   return lista
-    .map(banner => getIconUrl(banner.imagem))
-    .filter(Boolean);
+    .filter(banner => banner.texto)
+    .map(banner => ({ texto: banner.texto, link: banner.link || null }));
 });
 
 const depoimentosEstaticos = [
@@ -204,13 +204,10 @@ onMounted(async () => {
 
     <!-- BANNER DE DESTAQUE -->
     <section v-if="bannersDestaque.length" class="banner-destaque-section">
-      <img
-        v-for="(banner, i) in bannersDestaque"
-        :key="i"
-        :src="banner"
-        alt="Banner de destaque"
-        class="banner-destaque-img"
-      />
+      <div v-for="(banner, i) in bannersDestaque" :key="i" class="banner-destaque-faixa">
+        <span class="banner-destaque-texto">{{ banner.texto }}</span>
+        <a v-if="banner.link" :href="banner.link" target="_blank" class="banner-destaque-link">Saiba mais →</a>
+      </div>
     </section>
 
     <!-- HERO -->
@@ -420,7 +417,19 @@ onMounted(async () => {
 
 /* BANNER DE DESTAQUE */
 .banner-destaque-section { width: 100%; }
-.banner-destaque-img { width: 100%; height: auto; display: block; }
+.banner-destaque-faixa {
+  background: #ff9a16;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+.banner-destaque-texto { color: #4a2600; font-size: 0.95rem; font-weight: bold; }
+.banner-destaque-link { color: #4a2600; font-size: 0.95rem; text-decoration: underline; white-space: nowrap; }
+.banner-destaque-link:hover { color: #25074f; }
 
 /* STATS */
 .stats-band { background: #fff; padding: 44px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
