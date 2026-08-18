@@ -374,7 +374,7 @@ onMounted(async () => {
   position: relative;
   background: #25074f;
   overflow: hidden;
-  padding: 110px 0;
+  padding: 64px 0;
 }
 .intro-logo {
   position: absolute;
@@ -420,7 +420,7 @@ onMounted(async () => {
 .btn-hero:hover { background: #ffb04d; transform: translateY(-2px); }
 
 @media (max-width: 768px) {
-  .intro-section { padding: 80px 0; }
+  .intro-section { padding: 56px 0; }
   .intro-title { font-size: 2.2rem; }
   .intro-logo { top: -127px; right: -127px; width: 360px; max-width: 65vw; opacity: 0.3; }
 }
