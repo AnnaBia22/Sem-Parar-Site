@@ -291,7 +291,6 @@ const alternarCard = (id) => {
   transform-style: preserve-3d;
 }
 
-.polaroid-container:hover .card-flip,
 .card-flip.virado { transform: rotateY(180deg); }
 
 .card-front, .card-back {
