@@ -30,7 +30,7 @@ Até o momento, estamos trabalhando com:
 
 ## 📌 Status do Projeto
 
-🔧 **Em desenvolvimento**
+🔧 **Concluído**
 
 ---
 
